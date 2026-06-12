@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMC — Khateeb Medical Clinic</title>
+<link rel="icon" type="image/png" href="kmc-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+    /* =========================================
+   3D CARD CAROUSEL — GALLERY
+========================================= */
+#testimonials{
+  background:transparent;
+  overflow:hidden;
+  padding:120px 0;
+}
+.gallery-orbit-wrap{
+  max-width:1300px;
+  margin:auto;
+  padding:0 6%;
+}
+.gallery-orbit-header{
+  text-align:center;
+  margin-bottom:70px;
+}
+.gallery-orbit-header .section-label{
+  justify-content:center;
+}
+
+/* Carousel wrapper */
+.kmc-carousel-scene{
+  width:100%;
+  height:520px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible;
+  touch-action:pan-y;
+}
+
+.kmc-carousel-inner{
+  --card-w: 160px;
+  --card-h: 240px;
+  --tz: 340px;
+  --rx: -10deg;
+  --persp: 1100px;
+  --qty: 6;
+  position:absolute;
+  width:var(--card-w);
+  height:var(--card-h);
+  transform-style:preserve-3d;
+  animation:kmcRotate 24s linear infinite;
+}
+.kmc-carousel-inner:hover{
+  animation-play-state:paused;
+}
+
+@keyframes kmcRotate{
+  from{transform:perspective(var(--persp)) rotateX(var(--rx)) rotateY(0turn);}
+  to  {transform:perspective(var(--persp)) rotateX(var(--rx)) rotateY(1turn);}
+}
+
+.kmc-card{
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(201,147,58,.35);
+  box-shadow:
+    0 0 18px rgba(201,147,58,.18),
+    0 20px 60px rgba(0,0,0,.7),
+    inset 0 0 0 1px rgba(255,255,255,.04);
+  transform:
+    rotateY(calc((360deg / var(--qty)) * var(--index)))
+    translateZ(var(--tz));
+  cursor:pointer;
+  transition:border-color .4s, box-shadow .4s;
+  background:#0a0a0a;
+}
+.kmc-card:hover{
+  border-color:var(--gold);
+  box-shadow:
+    0 0 30px rgba(201,147,58,.55),
+    0 0 80px rgba(201,147,58,.2),
+    0 24px 70px rgba(0,0,0,.8);
+}
+
+.kmc-card-img{
+  width:100%;height:100%;
+  object-fit:cover;
+  filter:brightness(.72) saturate(.85);
+  transition:filter .5s, transform .5s;
+  pointer-events:none;
+  display:block;
+}
+.kmc-card:hover .kmc-card-img{
+  filter:brightness(1) saturate(1.1);
+  transform:scale(1.06);
+}
+
+/* Gradient overlay on each card */
+.kmc-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    transparent 45%,
+    rgba(8,8,8,.85) 100%
+  );
+  pointer-events:none;
+}
+
+/* Label at card bottom */
+.kmc-card-label{
+  position:absolute;
+  bottom:14px;left:0;right:0;
+  text-align:center;
+  font-family:var(--font-disp);
+  font-size:.78rem;font-weight:400;
+  letter-spacing:.14em;
+  color:var(--gold-lt);
+  opacity:.9;
+  z-index:2;
+  pointer-events:none;
+  text-transform:uppercase;
+}
+
+/* Decorative rings behind carousel */
+.kmc-ring-deco{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(201,147,58,.07);
+  pointer-events:none;
+}
+.kmc-rd-1{width:720px;height:720px;}
+.kmc-rd-2{width:560px;height:560px;border-color:rgba(201,147,58,.11);}
+
+/* Center emblem — داخل الفضاء ثلاثي الأبعاد عند Z=0 */
+.kmc-center-emblem{
+  position:absolute;
+  top:50%; left:50%;
+  transform: translate(-50%, -50%) translateZ(0px);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  pointer-events:none;
+}
+.kmc-center-glow{
+  width:90px;height:90px;
+  border-radius:50%;
+  background:radial-gradient(circle, #0a0a0a 52%, rgba(201,147,58,.14) 80%, transparent 100%);
+  border:1px solid rgba(201,147,58,.3);
+  display:flex;align-items:center;justify-content:center;
+  animation:emblemPulse 4s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(201,147,58,.15);
+}
+@keyframes emblemPulse{
+  0%,100%{box-shadow:0 0 12px rgba(201,147,58,.2);}
+  50%{box-shadow:0 0 30px rgba(201,147,58,.5);}
+}
+.kmc-center-logo-txt{
+  font-family:var(--font-disp);
+  font-size:1.1rem;font-weight:600;
+  letter-spacing:.18em;
+  color:var(--gold-lt);
+  filter:drop-shadow(0 0 8px rgba(201,147,58,.8));
+  display:inline-block;
+  transform:rotateY(180deg) rotateX(-10deg);
+}
+.kmc-center-sub{
+  font-size:.55rem;font-weight:300;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);
+  margin-top:-2px;
+  display:inline-block;
+  transform:rotateY(180deg) rotateX(-10deg);
+}
+
+/* Pause-on-hover hint */
+.kmc-hint{
+  text-align:center;
+  margin-top:32px;
+  font-size:.68rem;font-weight:300;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);
+}
+.kmc-hint-mobile{display:none;}
+@media(max-width:768px){
+  .kmc-hint-desktop{display:none;}
+  .kmc-hint-mobile{display:block;}
+}
+
+/* Lightbox */
+.lightbox{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.93);
+  backdrop-filter:blur(28px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .5s;
+}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox-inner{
+  position:relative;
+  display:flex;flex-direction:row;align-items:center;gap:48px;
+  max-width:min(92vw,1000px);
+  padding:0 20px;
+}
+.lightbox-img-wrap{
+  position:relative;
+  border-radius:24px;
+  overflow:hidden;
+  border:1px solid rgba(201,147,58,.45);
+  box-shadow:
+    0 0 60px rgba(201,147,58,.25),
+    0 40px 100px rgba(0,0,0,.75);
+  width:min(44vw,440px);
+  height:min(44vw,440px);
+  flex-shrink:0;
+  transform:translateX(-30px);
+  opacity:0;
+  transition:transform .6s cubic-bezier(.22,1,.36,1), opacity .6s ease;
+}
+.lightbox.open .lightbox-img-wrap{
+  transform:translateX(0);
+  opacity:1;
+}
+.lightbox-img-wrap img{
+  width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+/* Gold corner accents */
+.lightbox-img-wrap::before,
+.lightbox-img-wrap::after{
+  content:'';position:absolute;z-index:3;
+  width:28px;height:28px;
+  border-color:var(--gold);border-style:solid;
+}
+.lightbox-img-wrap::before{top:12px;left:12px;border-width:2px 0 0 2px;border-radius:4px 0 0 0;}
+.lightbox-img-wrap::after{bottom:12px;right:12px;border-width:0 2px 2px 0;border-radius:0 0 4px 4px;}
+
+.lightbox-close{
+  position:absolute;top:-18px;right:-18px;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(201,147,58,.12);
+  border:1px solid rgba(201,147,58,.4);
+  color:var(--gold-lt);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.3s;z-index:10;
+}
+.lightbox-close:hover{background:rgba(201,147,58,.32);}
+
+/* Right: description panel */
+.lightbox-desc{
+  flex:1;
+  min-width:0;
+  opacity:0;
+  transform:translateX(30px);
+  transition:transform .6s cubic-bezier(.22,1,.36,1) .15s, opacity .6s ease .15s;
+}
+.lightbox.open .lightbox-desc{
+  transform:translateX(0);
+  opacity:1;
+}
+.lightbox-category{
+  font-size:.68rem;font-weight:400;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.lightbox-category::before{
+  content:'';display:inline-block;
+  width:30px;height:1px;background:var(--gold);
+}
+.lightbox-title{
+  font-family:var(--font-disp);
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:300;line-height:1.15;
+  color:var(--text);
+  margin-bottom:20px;
+}
+.lightbox-title em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold),var(--gold-pale));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.lightbox-gold-line{
+  width:50px;height:1px;
+  background:linear-gradient(to right,var(--gold),transparent);
+  margin-bottom:22px;
+}
+.lightbox-text{
+  font-size:.9rem;font-weight:300;line-height:1.95;
+  color:var(--muted);
+  min-height:3.5em;
+}
+/* Drag handle for mobile lightbox */
+.lightbox-drag-handle{
+  display:none;
+  width:40px;height:4px;
+  background:rgba(201,147,58,.35);
+  border-radius:4px;
+  margin:12px auto 8px;
+  flex-shrink:0;
+}
+@media(max-width:768px){
+  .lightbox-drag-handle{display:block;}
+}
+
+/* Typewriter cursor */
+.lightbox-text .tw-cursor{
+  display:inline-block;
+  width:2px;height:1em;
+  background:var(--gold);
+  margin-left:2px;
+  vertical-align:middle;
+  animation:twBlink .7s step-end infinite;
+}
+@keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+.lightbox-badge{
+  margin-top:28px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;
+  border:1px solid rgba(201,147,58,.3);
+  border-radius:50px;
+  background:rgba(201,147,58,.05);
+  font-size:.72rem;font-weight:400;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold-lt);
+}
+
+@media(max-width:768px){
+  #testimonials{
+    padding:80px 0;
+  }
+  .gallery-orbit-wrap{
+    padding:0 4%;
+  }
+  .gallery-orbit-header{
+    margin-bottom:40px;
+  }
+  .kmc-carousel-scene{
+    height:360px;
+  }
+  .kmc-carousel-inner{
+    --card-w: 110px;
+    --card-h: 168px;
+    --tz: 200px;
+    --rx: -8deg;
+  }
+  .kmc-card-label{
+    font-size:.58rem;
+    bottom:8px;
+    letter-spacing:.08em;
+  }
+  .kmc-center-glow{width:60px;height:60px;}
+  .kmc-center-logo-txt{font-size:.72rem;letter-spacing:.1em;}
+  .kmc-center-sub{font-size:.42rem;}
+  .kmc-rd-1{width:440px;height:440px;}
+  .kmc-rd-2{width:340px;height:340px;}
+
+  /* Lightbox mobile - full screen stacked layout */
+  .lightbox{
+    align-items:flex-end;
+    padding:0;
+  }
+  .lightbox-inner{
+    flex-direction:column;
+    gap:0;
+    max-width:100vw;
+    width:100%;
+    padding:0;
+    max-height:92dvh;
+    overflow-y:auto;
+    background:rgba(10,10,10,.98);
+    border-radius:24px 24px 0 0;
+    border-top:1px solid rgba(201,147,58,.25);
+    padding-bottom:env(safe-area-inset-bottom, 16px);
+  }
+  .lightbox-img-wrap{
+    width:100%;
+    height:52vw;
+    min-height:220px;
+    max-height:320px;
+    border-radius:20px 20px 0 0;
+    border:none;
+    border-bottom:1px solid rgba(201,147,58,.2);
+    transform:none !important;
+    opacity:1 !important;
+    flex-shrink:0;
+  }
+  .lightbox.open .lightbox-img-wrap{
+    transform:none;
+    opacity:1;
+  }
+  .lightbox-desc{
+    padding:24px 22px 16px;
+    transform:none !important;
+    opacity:1 !important;
+  }
+  .lightbox.open .lightbox-desc{
+    transform:none;
+    opacity:1;
+  }
+  .lightbox-title{
+    font-size:1.6rem;
+    margin-bottom:14px;
+  }
+  .lightbox-text{
+    font-size:.82rem;
+    line-height:1.75;
+  }
+  .lightbox-badge{
+    margin-top:18px;
+    margin-bottom:8px;
+    font-size:.65rem;
+  }
+  .lightbox-close{
+    position:fixed;
+    top:auto;
+    bottom: calc(92dvh + 8px);
+    right:16px;
+    width:40px;height:40px;
+    background:rgba(8,8,8,.9);
+    border:1px solid rgba(201,147,58,.5);
+    z-index:10001;
+  }
+}
+
+@media(max-width:480px){
+  .kmc-carousel-scene{
+    height:300px;
+  }
+  .kmc-carousel-inner{
+    --card-w: 90px;
+    --card-h: 138px;
+    --tz: 168px;
+    --rx: -6deg;
+  }
+  .kmc-center-glow{width:50px;height:50px;}
+  .kmc-center-logo-txt{font-size:.62rem;letter-spacing:.08em;}
+  .kmc-center-sub{display:none;}
+  .kmc-hint{font-size:.58rem;padding:0 16px;}
+  .kmc-rd-1{width:340px;height:340px;}
+  .kmc-rd-2{width:260px;height:260px;}
+
+  .lightbox-img-wrap{
+    height:56vw;
+    min-height:200px;
+  }
+  .lightbox-inner{
+    max-height:88dvh;
+  }
+  .lightbox-desc{
+    padding:20px 18px 12px;
+  }
+  .lightbox-title{
+    font-size:1.35rem;
+  }
+}
+/* =========================================
+   CSS VARIABLES & RESET
+========================================= */
+:root {
+  --gold:      #c9933a;
+  --gold-lt:   #e8b96a;
+  --gold-pale: #f5dba0;
+  --dark:      #080808;
+  --dark2:     #0d0d0d;
+  --dark3:     #141414;
+  --glass:     rgba(255,255,255,0.04);
+  --glass-b:   rgba(255,255,255,0.08);
+  --border:    rgba(201,147,58,0.18);
+  --text:      #e8e0d4;
+  --muted:     #8a806e;
+  --font-disp: 'Cormorant Garamond', serif;
+  --font-body: 'Outfit', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--font-body);
+  background:var(--dark);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* =========================================
+   CUSTOM CURSOR
+========================================= */
+#cursor{
+  position:fixed;
+  width:10px;height:10px;
+  background:var(--gold);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:transform .08s, width .25s, height .25s, background .25s;
+  mix-blend-mode:screen;
+}
+#cursor-ring{
+  position:fixed;
+  width:38px;height:38px;
+  border:1px solid rgba(201,147,58,0.6);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:transform .18s ease, width .3s, height .3s, border-color .3s;
+}
+body:has(a:hover) #cursor-ring,
+body:has(button:hover) #cursor-ring{
+  width:60px;height:60px;
+  border-color:var(--gold-lt);
+}
+
+/* =========================================
+   BACKGROUND CANVAS
+========================================= */
+#bg-canvas{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* =========================================
+   NOISE OVERLAY
+========================================= */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.35;
+}
+
+/* =========================================
+   NAVBAR
+========================================= */
+nav{
+  position:fixed;top:0;left:0;width:100%;
+  z-index:1000;
+  padding:22px 6%;
+  display:flex;justify-content:space-between;align-items:center;
+  backdrop-filter:blur(24px) saturate(1.2);
+  -webkit-backdrop-filter:blur(24px);
+  background:rgba(8,8,8,0.55);
+  border-bottom:1px solid rgba(201,147,58,0.08);
+  transition:padding .4s, background .4s;
+}
+nav.scrolled{
+  padding:14px 6%;
+  background:rgba(8,8,8,0.85);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:14px;
+}
+.nav-logo img{
+  width:52px;height:52px;object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(201,147,58,0.8));
+  animation:logoFloat 5s ease-in-out infinite;
+}
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px) rotate(2deg)}
+}
+.nav-logo-text{
+  font-family:var(--font-disp);
+  font-size:1.55rem;font-weight:600;
+  letter-spacing:.08em;
+  color:var(--gold-lt);
+  line-height:1;
+}
+.nav-logo-sub{
+  font-family:var(--font-body);
+  font-size:.62rem;font-weight:300;
+  letter-spacing:.22em;
+  color:var(--muted);
+  text-transform:uppercase;
+  display:block;margin-top:1px;
+}
+.nav-links{
+  display:flex;gap:38px;list-style:none;
+}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:.78rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  transition:color .3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:var(--gold);transition:width .3s;
+}
+.nav-links a:hover{color:var(--gold-lt);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{
+  padding:11px 28px;
+  border:1px solid var(--gold);
+  border-radius:50px;
+  background:transparent;
+  color:var(--gold-lt);
+  font-family:var(--font-body);
+  font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;
+  transition:.3s;
+}
+.nav-cta:hover{background:var(--gold);color:#080808;}
+.menu-btn{display:none;font-size:1.6rem;cursor:pointer;color:var(--gold);}
+
+/* =========================================
+   HERO
+========================================= */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:120px 6% 80px;
+  position:relative;z-index:2;
+  overflow:hidden;
+}
+.hero-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+  width:100%;max-width:1400px;margin:auto;
+}
+.hero-text{position:relative}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:.7rem;font-weight:400;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+}
+.hero-eyebrow::before{
+  content:'';display:block;width:32px;height:1px;background:var(--gold);
+}
+.hero-h1{
+  font-family:var(--font-disp);
+  font-size:clamp(3.2rem,5vw,6rem);
+  font-weight:300;line-height:1.05;
+  letter-spacing:-.01em;margin-bottom:28px;
+}
+.hero-h1 em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold),var(--gold-pale));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-desc{
+  font-size:1rem;font-weight:300;line-height:1.9;
+  color:var(--muted);max-width:500px;margin-bottom:48px;
+}
+.hero-actions{display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  padding:16px 42px;
+  background:linear-gradient(135deg,var(--gold),#b07a28);
+  color:#050505;font-weight:600;
+  font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;
+  border:none;border-radius:60px;cursor:pointer;
+  box-shadow:0 12px 40px rgba(201,147,58,0.35);
+  transition:.35s;position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--gold-pale),var(--gold));
+  opacity:0;transition:opacity .35s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 55px rgba(201,147,58,0.5);}
+.btn-primary:hover::before{opacity:1;}
+.btn-primary span{position:relative;z-index:1;}
+.btn-ghost{
+  padding:15px 38px;
+  border:1px solid rgba(201,147,58,0.4);
+  background:transparent;color:var(--gold-lt);
+  font-size:.82rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;
+  border-radius:60px;cursor:pointer;
+  transition:.35s;
+}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(201,147,58,0.07);}
+.hero-stats{
+  display:flex;gap:40px;margin-top:60px;
+  padding-top:44px;border-top:1px solid rgba(255,255,255,0.07);
+}
+.stat-item{text-align:left;}
+.stat-num{
+  font-family:var(--font-disp);
+  font-size:2.4rem;font-weight:600;
+  background:linear-gradient(135deg,var(--gold-pale),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{
+  font-size:.7rem;font-weight:300;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);
+}
+
+/* Hero visual */
+.hero-visual{
+  position:relative;display:flex;
+  justify-content:center;align-items:center;
+  height:580px;
+}
+.hero-rings-wrap{
+  position:absolute;inset:0;
+  display:flex;justify-content:center;align-items:center;
+}
+.ring{
+  position:absolute;border-radius:50%;border:1px solid rgba(201,147,58,.18);
+}
+.ring-1{width:420px;height:420px;animation:ringPulse 4s ease-in-out infinite;}
+.ring-2{width:340px;height:340px;border-color:rgba(201,147,58,.28);animation:ringPulse 4s ease-in-out infinite .8s;}
+.ring-3{width:260px;height:260px;border-color:rgba(201,147,58,.4);
+  box-shadow:0 0 30px rgba(201,147,58,.12),inset 0 0 30px rgba(201,147,58,.05);
+  animation:ringPulse 4s ease-in-out infinite 1.6s;}
+@keyframes ringPulse{
+  0%,100%{transform:scale(1);opacity:.7;}
+  50%{transform:scale(1.05);opacity:1;}
+}
+.orbit{
+  position:absolute;width:480px;height:480px;
+  border-radius:50%;
+  border:1px dashed rgba(201,147,58,.12);
+  animation:orbitSpin 18s linear infinite;
+}
+@keyframes orbitSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.orbit-dot{
+  position:absolute;top:0;left:50%;
+  width:8px;height:8px;
+  margin-left:-4px;margin-top:-4px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold-pale),var(--gold));
+  box-shadow:0 0 14px var(--gold),0 0 28px rgba(201,147,58,.5);
+}
+.orbit-dot-2{top:auto;bottom:0;left:50%;margin-bottom:-4px;}
+
+.hero-logo-3d{
+  position:relative;z-index:5;
+  width:260px;
+  filter:
+    drop-shadow(0 0 20px rgba(201,147,58,1))
+    drop-shadow(0 0 60px rgba(201,147,58,.65))
+    drop-shadow(0 0 100px rgba(201,147,58,.3));
+  animation:heroLogoFloat 7s ease-in-out infinite;
+}
+@keyframes heroLogoFloat{
+  0%,100%{transform:translateY(0) rotateY(0deg) scale(1);}
+  33%{transform:translateY(-18px) rotateY(8deg) scale(1.03);}
+  66%{transform:translateY(-8px) rotateY(-5deg) scale(1.01);}
+}
+
+/* Gold light streak */
+.light-streak{
+  position:absolute;
+  width:2px;height:160px;
+  background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  opacity:.4;
+  animation:streak 3s ease-in-out infinite;
+  border-radius:2px;
+}
+.ls-1{top:60px;left:45%;animation-delay:.5s;}
+.ls-2{top:100px;right:36%;width:1px;height:100px;animation-delay:1.2s;}
+@keyframes streak{
+  0%,100%{opacity:.2;transform:translateY(0);}
+  50%{opacity:.6;transform:translateY(20px);}
+}
+
+/* Scroll indicator */
+.scroll-indicator{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+}
+.scroll-line{
+  width:1px;height:50px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse{
+  0%,100%{opacity:.4;transform:scaleY(.8);}
+  50%{opacity:1;transform:scaleY(1);}
+}
+
+/* =========================================
+   SECTIONS COMMON
+========================================= */
+section{padding:120px 6%;position:relative;z-index:2;}
+.section-label{
+  font-size:.68rem;font-weight:400;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(201,147,58,.4),transparent);max-width:120px;}
+.section-h2{
+  font-family:var(--font-disp);
+  font-size:clamp(2.4rem,4vw,4rem);
+  font-weight:300;line-height:1.1;
+  margin-bottom:20px;
+}
+.section-h2 em{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold-lt),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-sub{
+  color:var(--muted);font-weight:300;
+  font-size:.95rem;line-height:1.8;max-width:560px;
+}
+.gold-line{
+  display:block;width:40px;height:2px;
+  background:linear-gradient(to right,var(--gold),transparent);
+  margin:28px 0;
+}
+
+/* =========================================
+   DOCTOR
+========================================= */
+#doctor{background:var(--dark2);}
+.doctor-inner{
+  display:grid;
+  grid-template-columns:1fr 1.1fr;
+  gap:80px;align-items:center;
+  max-width:1300px;margin:auto;
+}
+.doctor-visual{
+  position:relative;
+  display:flex;justify-content:center;align-items:center;
+  min-height:520px;
+}
+.doctor-halo{
+  position:absolute;
+  width:440px;height:440px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,147,58,.08) 0%,transparent 70%);
+  animation:haloBreath 5s ease-in-out infinite;
+}
+@keyframes haloBreath{
+  0%,100%{transform:scale(1);opacity:.6;}
+  50%{transform:scale(1.08);opacity:1;}
+}
+.doctor-ring-outer{
+  position:absolute;
+  width:420px;height:420px;
+  border-radius:50%;
+  border:1px solid rgba(201,147,58,.22);
+  animation:drSpin 20s linear infinite;
+}
+.doctor-ring-inner{
+  position:absolute;
+  width:360px;height:360px;
+  border-radius:50%;
+  border:1px solid rgba(201,147,58,.14);
+  animation:drSpin 12s linear infinite reverse;
+}
+@keyframes drSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.doctor-ring-outer::before,.doctor-ring-outer::after{
+  content:'';position:absolute;
+  width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle,var(--gold-pale),var(--gold));
+  box-shadow:0 0 12px var(--gold);
+}
+.doctor-ring-outer::before{top:0;left:50%;margin-left:-5px;margin-top:-5px;}
+.doctor-ring-outer::after{bottom:0;left:50%;margin-left:-5px;margin-bottom:-5px;}
+.doctor-img{
+  position:relative;z-index:5;
+  width:340px;height:auto;
+  object-fit:contain;
+  filter:
+    drop-shadow(0 0 16px rgba(201,147,58,.7))
+    drop-shadow(0 0 50px rgba(201,147,58,.35));
+  animation:drFloat 7s ease-in-out infinite;
+  border-radius:50%;
+}
+@keyframes drFloat{
+  0%,100%{transform:translateY(0) rotateY(0deg);}
+  50%{transform:translateY(-12px) rotateY(6deg);}
+}
+.doctor-content{}
+.doctor-tags{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;margin-bottom:32px;
+}
+.tag{
+  padding:7px 18px;
+  border:1px solid var(--border);
+  border-radius:50px;
+  font-size:.72rem;font-weight:300;letter-spacing:.1em;
+  color:var(--gold-lt);
+  background:rgba(201,147,58,.05);
+  backdrop-filter:blur(8px);
+}
+.doctor-bio{
+  font-size:.95rem;line-height:2;color:var(--muted);margin-bottom:32px;
+}
+.doctor-contact-row{
+  display:flex;gap:16px;flex-wrap:wrap;
+}
+.contact-chip{
+  display:flex;align-items:center;gap:9px;
+  padding:12px 22px;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:14px;
+  font-size:.78rem;color:var(--text);
+  backdrop-filter:blur(12px);
+  text-decoration:none;
+  transition:.3s;
+}
+.contact-chip:hover{background:rgba(201,147,58,.1);border-color:var(--gold);}
+.contact-chip svg{width:16px;height:16px;fill:var(--gold);}
+
+/* =========================================
+   SERVICES
+========================================= */
+#services{background:transparent;}
+.services-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  flex-wrap:wrap;gap:30px;
+  max-width:1300px;margin:0 auto 60px;
+}
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  max-width:1300px;margin:auto;
+}
+.service-card{
+  position:relative;border-radius:24px;overflow:hidden;
+  background:var(--dark3);
+  border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer;
+  group:hover;
+  transition:transform .4s, box-shadow .4s, border-color .4s;
+}
+.service-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 30px 80px rgba(0,0,0,.5), 0 0 40px rgba(201,147,58,.1);
+  border-color:rgba(201,147,58,.3);
+}
+.service-img-wrap{position:relative;overflow:hidden;height:240px;}
+.service-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s ease;
+  filter:brightness(.85);
+}
+.service-card:hover .service-img-wrap img{transform:scale(1.07);}
+.service-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,8,8,.9) 0%,transparent 55%);
+  transition:opacity .4s;
+}
+.service-card:hover .service-img-overlay{opacity:.7;}
+.service-body{padding:28px;}
+.service-num{
+  font-family:var(--font-disp);
+  font-size:.95rem;font-weight:300;
+  color:rgba(201,147,58,.4);
+  letter-spacing:.1em;margin-bottom:10px;
+}
+.service-title{
+  font-family:var(--font-disp);
+  font-size:1.55rem;font-weight:400;
+  color:var(--text);margin-bottom:10px;
+}
+.service-desc{font-size:.82rem;font-weight:300;line-height:1.85;color:var(--muted);}
+.service-arrow{
+  display:none;
+}
+
+/* =========================================
+   GALLERY / BEFORE-AFTER
+========================================= */
+#gallery{background:transparent;}
+.gallery-intro{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+  max-width:1300px;margin:0 auto 70px;
+}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  max-width:1300px;margin:auto;
+}
+.gallery-item{
+  position:relative;border-radius:20px;overflow:hidden;
+  aspect-ratio:4/5;
+  cursor:pointer;
+  transition:transform .4s;
+}
+.gallery-item:hover{transform:scale(1.02);}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s;filter:brightness(.9);
+}
+.gallery-item:hover img{transform:scale(1.06);}
+.gallery-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,147,58,.08),rgba(0,0,0,.4));
+  opacity:0;transition:opacity .4s;
+  display:flex;align-items:center;justify-content:center;
+}
+.gallery-item:hover .gallery-overlay{opacity:1;}
+.gallery-overlay-text{
+  font-family:var(--font-disp);
+  font-size:1.1rem;font-style:italic;
+  color:var(--gold-pale);
+  letter-spacing:.08em;
+}
+.gallery-item.wide{grid-column:span 2;aspect-ratio:16/7;}
+
+/* =========================================
+   TESTIMONIALS
+========================================= */
+#testimonials{background:transparent;}
+.testimonials-wrap{
+  max-width:1300px;margin:auto;
+}
+.test-header{margin-bottom:60px;}
+.test-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:24px;
+}
+.test-card{
+  padding:36px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:24px;
+  backdrop-filter:blur(16px);
+  transition:.4s;
+  position:relative;overflow:hidden;
+}
+.test-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.test-card:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(201,147,58,.22);
+  transform:translateY(-4px);
+}
+.test-card:hover::before{opacity:1;}
+.test-stars{
+  display:flex;gap:4px;margin-bottom:20px;
+}
+.star{color:var(--gold);font-size:.85rem;}
+.test-text{
+  font-family:var(--font-disp);
+  font-size:1.15rem;font-style:italic;font-weight:300;
+  line-height:1.75;color:var(--text);margin-bottom:24px;
+}
+.test-author{display:flex;align-items:center;gap:14px;}
+.test-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#7a4800);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-disp);font-size:1.1rem;font-weight:600;
+  color:var(--dark);border:1px solid var(--gold);
+  flex-shrink:0;
+}
+.test-name{
+  font-size:.85rem;font-weight:500;color:var(--text);margin-bottom:2px;
+}
+.test-service{font-size:.72rem;font-weight:300;color:var(--muted);}
+
+/* =========================================
+   BOOKING
+========================================= */
+#booking{background:transparent;}
+.booking-inner{
+  display:grid;grid-template-columns:1fr 1.2fr;
+  gap:80px;align-items:start;
+  max-width:1200px;margin:auto;
+}
+.booking-info-card{
+  padding:48px;
+  background:linear-gradient(145deg,rgba(201,147,58,.08),rgba(201,147,58,.02));
+  border:1px solid var(--border);
+  border-radius:28px;
+  backdrop-filter:blur(20px);
+}
+.booking-details{margin-top:38px;display:flex;flex-direction:column;gap:20px;}
+.booking-detail-item{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  background:rgba(255,255,255,0.03);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.05);
+}
+.detail-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:rgba(201,147,58,.12);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:1.1rem;
+}
+.detail-label{
+  font-size:.68rem;font-weight:300;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:2px;
+}
+.detail-value{
+  font-size:.88rem;font-weight:400;color:var(--text);
+}
+.form-wrap{
+  padding:48px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:28px;
+  backdrop-filter:blur(20px);
+}
+.form-title{
+  font-family:var(--font-disp);
+  font-size:1.8rem;font-weight:400;margin-bottom:32px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{
+  display:block;font-size:.7rem;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;padding:15px 18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  color:var(--text);font-family:var(--font-body);font-size:.9rem;
+  transition:.3s;outline:none;
+  -webkit-appearance:none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:var(--gold);
+  background:rgba(201,147,58,.05);
+  box-shadow:0 0 0 3px rgba(201,147,58,.08);
+}
+.form-group select option{background:#1a1a1a;color:var(--text);}
+.form-group textarea{min-height:120px;resize:vertical;}
+.submit-btn{
+  width:100%;padding:18px;margin-top:8px;
+  background:linear-gradient(135deg,var(--gold),#a07020);
+  border:none;border-radius:14px;
+  color:#050505;font-weight:600;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 12px 40px rgba(201,147,58,.3);
+  transition:.35s;
+}
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 18px 55px rgba(201,147,58,.45);
+}
+.success-msg{
+  display:none;margin-top:20px;padding:16px 20px;
+  background:rgba(60,180,100,.1);border:1px solid rgba(60,180,100,.3);
+  border-radius:12px;color:#9cffc1;text-align:center;font-size:.88rem;
+}
+
+/* =========================================
+   CONTACT
+========================================= */
+#contact{background:transparent;}
+.contact-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+  max-width:1100px;margin:60px auto 0;
+}
+.contact-card{
+  padding:36px 32px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:22px;
+  backdrop-filter:blur(16px);
+  text-align:center;
+  transition:.4s;
+}
+.contact-card:hover{
+  background:rgba(201,147,58,.05);
+  border-color:var(--border);
+  transform:translateY(-4px);
+}
+.contact-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:rgba(201,147,58,.1);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin:0 auto 20px;
+}
+.contact-card h4{
+  font-family:var(--font-disp);
+  font-size:1.05rem;font-weight:400;
+  color:var(--gold-lt);margin-bottom:10px;
+}
+.contact-card p{font-size:.85rem;font-weight:300;line-height:1.8;color:var(--muted);}
+.contact-card a{color:var(--text);text-decoration:none;transition:color .3s;}
+.contact-card a:hover{color:var(--gold-lt);}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer{
+  padding:48px 6%;
+  background:#050505;
+  border-top:1px solid rgba(201,147,58,.08);
+  text-align:center;
+  position:relative;z-index:2;
+}
+.footer-logo{
+  display:inline-flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.footer-logo img{width:40px;opacity:.7;filter:drop-shadow(0 0 8px rgba(201,147,58,.5));}
+.footer-logo span{
+  font-family:var(--font-disp);font-size:1.2rem;font-weight:400;
+  letter-spacing:.12em;color:var(--muted);
+}
+.footer-copy{
+  font-size:.72rem;font-weight:300;letter-spacing:.12em;color:var(--muted);
+}
+
+/* =========================================
+   GOLD DIVIDER
+========================================= */
+.gold-divider{
+  width:100%;max-width:1300px;margin:0 auto;
+  height:1px;
+  background:linear-gradient(to right,transparent,rgba(201,147,58,.3),transparent);
+}
+
+/* =========================================
+   FLOATING PARTICLES (additional CSS)
+========================================= */
+.particle-field{
+  position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media(max-width:1100px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;}
+  .hero-text{order:2;}
+  .hero-visual{order:1;height:420px;}
+  .hero-desc{margin:0 auto 48px;}
+  .hero-actions{justify-content:center;}
+  .hero-stats{justify-content:center;}
+  .doctor-inner{grid-template-columns:1fr;}
+  .gallery-intro{grid-template-columns:1fr;}
+  .booking-inner{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  nav{position:fixed;}
+  nav .nav-links{
+    display:none;
+    position:absolute;
+    top:100%;
+    right:4%;
+    width:min(260px, calc(100vw - 32px));
+    background:rgba(13,13,13,.97);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(201,147,58,.18);
+    flex-direction:column;
+    padding:24px;
+    border-radius:16px;
+    gap:18px;
+    z-index:9999;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+  }
+  nav .nav-links a{font-size:.85rem;letter-spacing:.1em;}
+  nav .nav-links.active{display:flex;}
+  .menu-btn{display:block;z-index:1001;position:relative;}
+  .nav-cta{display:none;}
+  .hero-h1{font-size:2.4rem;}
+  .hero-visual{height:340px;}
+  .hero-logo-3d{width:180px;}
+  .ring-1{width:280px;height:280px;}
+  .ring-2{width:220px;height:220px;}
+  .ring-3{width:165px;height:165px;}
+  .orbit{width:320px;height:320px;}
+  .gallery-grid{grid-template-columns:1fr;}
+  .gallery-item.wide{grid-column:span 1;aspect-ratio:4/3;}
+  .form-row{grid-template-columns:1fr;}
+  .section-h2{font-size:2rem;}
+  #cursor,#cursor-ring{display:none;}
+  body{cursor:auto;}
+  /* Touch-friendly tap targets */
+  .kmc-card{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .lightbox-close{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  /* Doctor section stacked */
+  .doctor-visual{min-height:360px;}
+  .doctor-img{width:260px;}
+  .doctor-halo{width:320px;height:320px;}
+  .doctor-ring-outer{width:320px;height:320px;}
+  .doctor-ring-inner{width:270px;height:270px;}
+  /* Services text alignment */
+  .services-header p{text-align:left!important;}
+}
+@media(max-width:480px){
+  section{padding:70px 4%;}
+  .hero{padding:90px 4% 50px;}
+  .hero-h1{font-size:1.85rem;line-height:1.1;}
+  .hero-stats{gap:16px;}
+  .hero-stats .stat-num{font-size:1.8rem;}
+  .hero-visual{height:280px;}
+  .hero-logo-3d{width:145px;}
+  .ring-1{width:220px;height:220px;}
+  .ring-2{width:170px;height:170px;}
+  .ring-3{width:125px;height:125px;}
+  .orbit{width:250px;height:250px;}
+  .booking-info-card,.form-wrap{padding:24px 18px;}
+  .doctor-img{width:200px;}
+  .doctor-halo{width:250px;height:250px;}
+  .doctor-ring-outer{width:250px;height:250px;}
+  .doctor-ring-inner{width:210px;height:210px;}
+  .doctor-visual{min-height:280px;}
+  .hero-desc{font-size:.9rem;}
+  .btn-primary,.btn-ghost{padding:14px 28px;font-size:.75rem;}
+  .tag{padding:6px 14px;font-size:.68rem;}
+  nav{padding:14px 4%;}
+  .nav-logo-text{font-size:1.3rem;}
+  .nav-logo img{width:40px;height:40px;}
+}
+
+/* =========================================
+   SCROLL REVEAL
+========================================= */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s ease, transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .9s ease, transform .9s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .9s ease, transform .9s ease;}
+.reveal-right.visible{opacity:1;transform:translateX(0);}
+
+/* stagger helpers */
+.delay-1{transition-delay:.1s}
+.delay-2{transition-delay:.2s}
+.delay-3{transition-delay:.3s}
+.delay-4{transition-delay:.4s}
+.delay-5{transition-delay:.5s}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Three.js Background Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="img-kmc/1779547444479-removebg-preview.png" alt="KMC Logo">
+    <div>
+      <div class="nav-logo-text">KMC</div>
+      <span class="nav-logo-sub">Khateeb Medical Clinic</span>
+    </div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#doctor">Doctor</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book Now</button>
+  <div class="menu-btn" id="menuBtn">☰</div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow reveal">Premium Medical Aesthetics</div>
+      <h1 class="hero-h1 reveal delay-1">
+        The Art of<br><em>Refined Beauty</em>
+       <span><b>KMC</b></span> 
+      </h1>
+      <p class="hero-desc reveal delay-2">
+        Experience world-class cosmetic treatments and precision-crafted aesthetic medicine at KMC — where science meets artistry.
+      </p>
+      <div class="hero-actions reveal delay-3">
+        <button class="btn-primary" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})"><span>Book Consultation</span></button>
+        <button class="btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Our Services</button>
+      </div>
+      <div class="hero-stats reveal delay-4">
+        <div class="stat-item">
+          <div class="stat-num" data-target="12" data-suffix="+">0+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="4" data-suffix="K+">0K+</div>
+          <div class="stat-label">Satisfied Clients</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="3" data-suffix="">0</div>
+          <div class="stat-label">Laser Systems</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-rings-wrap">
+        <div class="orbit"><div class="orbit-dot"></div><div class="orbit-dot orbit-dot-2"></div></div>
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+      </div>
+      <div class="light-streak ls-1"></div>
+      <div class="light-streak ls-2"></div>
+      <img src="img-kmc/1779547444479-removebg-preview.png" class="hero-logo-3d" alt="KMC Logo">
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<div class="gold-divider"></div>
+
+<!-- ===== DOCTOR ===== -->
+<section id="doctor">
+  <div class="doctor-inner">
+    <div class="doctor-visual reveal-left">
+      <div class="doctor-halo"></div>
+      <div class="doctor-ring-outer"></div>
+      <div class="doctor-ring-inner"></div>
+      <img src="img-kmc/ChatGPT_Image_May_28__2026__04_54_31_PM-removebg-preview.png" class="doctor-img" alt="Dr. Nashwan Al-Khatib">
+    </div>
+    <div class="doctor-content reveal-right">
+      <div class="section-label">Meet Your Specialist</div>
+      <h2 class="section-h2">Dr. Nashwan<br><em>Al-Khatib</em></h2>
+      <div class="gold-line"></div>
+      <p class="doctor-bio">
+        A board-certified plastic surgeon and aesthetic specialist with over a decade of expertise in advanced cosmetic procedures. Dr. Nashwan combines surgical precision with an artistic eye — delivering naturally beautiful, transformative results tailored to each individual.
+      </p>
+      <div class="doctor-tags">
+        <span class="tag">Plastic Surgery</span>
+        <span class="tag">Botox &amp; Fillers</span>
+        <span class="tag">Laser Specialist</span>
+        <span class="tag">Skin Rejuvenation</span>
+        <span class="tag">Aesthetic Medicine</span>
+      </div>
+      <div class="doctor-contact-row">
+        <a href="tel:+963930751516" class="contact-chip">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          0930 751 516
+        </a>
+        <a href="tel:+9630936699112" class="contact-chip">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          0936 699 112
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider" style="max-width:none;"></div>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div class="services-header">
+    <div>
+      <div class="section-label reveal">What We Offer</div>
+      <h2 class="section-h2 reveal delay-1">Premium<br><em>Treatments</em></h2>
+    </div>
+    <p class="section-sub reveal delay-2" style="max-width:380px;text-align:right;">
+      Cutting-edge aesthetic technologies delivered with clinical excellence and a commitment to natural results.
+    </p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal delay-1">
+      <div class="service-img-wrap">
+        <img src="img-kmc/laser_v2.jpg" alt="Laser Treatments">
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-num">01</div>
+        <div class="service-title">Laser Treatments</div>
+        <div class="service-desc">MotusAY · MotusAX · Again — three elite laser systems for hair removal, skin rejuvenation, and pigmentation correction.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal delay-2">
+      <div class="service-img-wrap">
+        <img src="img-kmc/botox.jpg" alt="Botox">
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-num">02</div>
+        <div class="service-title">Botox</div>
+        <div class="service-desc">Elegant anti-aging injections that relax expression lines while preserving natural movement and facial harmony.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal delay-3">
+      <div class="service-img-wrap">
+        <img src="img-kmc/dermal_fillers_v3.jpg" alt="Dermal Fillers">
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-num">03</div>
+        <div class="service-title">Dermal Fillers</div>
+        <div class="service-desc">Restore lost volume, sculpt contours, and achieve youthful radiance with premium hyaluronic acid fillers.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal delay-4">
+      <div class="service-img-wrap">
+        <img src="img-kmc/nadara_skincare.jpg" alt="Skin Care">
+        <div class="service-img-overlay"></div>
+      </div>
+      <div class="service-body">
+        <div class="service-num">04</div>
+        <div class="service-title">Luxury Skin Care</div>
+        <div class="service-desc">Medical-grade facial treatments, mesotherapy, and custom skincare protocols for luminous, healthy skin.</div>
+      </div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider" style="max-width:none;"></div>
+
+
+<div class="gold-divider" style="max-width:none;"></div>
+
+<!-- ===== TESTIMONIALS / RESULTS GALLERY ===== -->
+<section id="testimonials">
+  <div class="gallery-orbit-wrap">
+
+    <div class="gallery-orbit-header reveal">
+      <div class="section-label" style="justify-content:center;">Results Gallery</div>
+      <h2 class="section-h2" style="text-align:center;">Our <em>Transformations</em></h2>
+      <p class="section-sub" style="text-align:center;margin:14px auto 0;">Hover to pause — click any card to enlarge</p>
+    </div>
+
+    <!-- 3D Card Carousel -->
+    <div class="kmc-carousel-scene">
+
+      <!-- Cards + center emblem داخل الفضاء ثلاثي الأبعاد -->
+      <div class="kmc-carousel-inner" id="kmcCarousel">
+
+        <!-- الدائرة المركزية عند Z=0، البطاقات الأمامية تغطيها تلقائياً -->
+        <div class="kmc-center-emblem">
+          <div class="kmc-center-glow">
+            <span class="kmc-center-logo-txt">KMC</span>
+          </div>
+          <span class="kmc-center-sub">Gallery</span>
+        </div>
+
+        <div class="kmc-card" style="--index:0;--qty:6;" data-src="img-kmc/ChatGPT Image Jun 10, 2026, 06_58_05 PM.png"
+             data-category="Laser Sculpting"
+             data-title="Body <em>Sculpting</em>"
+             data-desc="Advanced laser body contouring using our elite MotusAY system — precisely targeting stubborn fat deposits and tightening skin for a naturally defined silhouette. Results are visible from the first session, with full transformation achieved over a personalised treatment plan.">
+          <img class="kmc-card-img" src="img-kmc/ChatGPT Image Jun 10, 2026, 06_58_05 PM.png" alt="Laser">
+          <span class="kmc-card-label">Body sculpting</span>
+        </div>
+
+        <div class="kmc-card" style="--index:1;--qty:6;" data-src="img-kmc/ChatGPT Image Jun 10, 2026, 06_55_10 PM.png"
+             data-category="Fat Reduction"
+             data-title="Non-Surgical <em>Fat Removal</em>"
+             data-desc="Our non-invasive fat reduction protocol delivers exceptional results without surgery or downtime. Using targeted energy to break down fat cells, the body naturally eliminates them over the following weeks — revealing smoother, slimmer contours that last.">
+          <img class="kmc-card-img" src="img-kmc/ChatGPT Image Jun 10, 2026, 06_55_10 PM.png" alt="Botox">
+          <span class="kmc-card-label">fat removal</span>
+        </div>
+
+        <div class="kmc-card" style="--index:2;--qty:6;" data-src="img-kmc/pp.jpg"
+             data-category="Dermal Fillers"
+             data-title="Volume &amp; <em>Contouring</em>"
+             data-desc="Premium hyaluronic acid fillers expertly placed by Dr. Nashwan to restore youthful volume, sculpt cheekbones, refine lips, and harmonise facial proportions — all with an utterly natural finish that enhances your unique features.">
+          <img class="kmc-card-img" src="img-kmc/pp.jpg" alt="Fillers">
+          <span class="kmc-card-label">Fillers</span>
+        </div>
+
+        <div class="kmc-card" style="--index:3;--qty:6;" data-src="img-kmc/ChatGPT Image Jun 10, 2026, 07_00_21 PM.png"
+             data-category="Luxury Skin Care"
+             data-title="Radiant <em>Skin</em>"
+             data-desc="Medical-grade skin rejuvenation combining mesotherapy, bespoke serums, and advanced protocols to target pigmentation, uneven texture, and dullness. Each treatment is custom-designed for your skin type — delivering a luminous, healthy glow that lasts.">
+          <img class="kmc-card-img" src="img-kmc/ChatGPT Image Jun 10, 2026, 07_00_21 PM.png" alt="Skincare">
+          <span class="kmc-card-label">Skincare</span>
+        </div>
+
+        <div class="kmc-card" style="--index:4;--qty:6;" data-src="img-kmc/oo.jpg"
+             data-category="Treatment Result"
+             data-title="Before &amp; <em>After</em>"
+             data-desc="Real results from real clients at KMC. Every transformation is a testament to our commitment to precision, safety, and natural beauty. Dr. Nashwan's approach ensures outcomes that complement your individual features — never overdone, always refined.">
+          <img class="kmc-card-img" src="img-kmc/oo.jpg" alt="Result">
+          <span class="kmc-card-label">Result</span>
+        </div>
+
+        <div class="kmc-card" style="--index:5;--qty:6;" data-src="img-kmc/1781104836687.jpg"
+             data-category="Our Team"
+             data-title="The KMC <em>Experts</em>"
+             data-desc="Led by Dr. Nashwan Al-Khatib — board-certified plastic surgeon and aesthetic specialist — our dedicated team brings together clinical excellence and a genuine passion for beauty. Every client is treated with the highest standards of care, privacy, and professionalism.">
+          <img class="kmc-card-img" src="img-kmc/1781104836687.jpg" alt="Treatment">
+          <span class="kmc-card-label">Team</span>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="kmc-hint kmc-hint-desktop">✦ Hover to pause &nbsp;·&nbsp; Click to zoom ✦</p>
+    <p class="kmc-hint kmc-hint-mobile">✦ اضغط على أي بطاقة لتكبيرها ✦</p>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <div class="lightbox-drag-handle"></div>
+      <div class="lightbox-close" id="lbClose">✕</div>
+      <div class="lightbox-img-wrap">
+        <img src="" id="lbImg" alt="">
+      </div>
+      <div class="lightbox-desc">
+        <div class="lightbox-category" id="lbCategory">KMC Gallery</div>
+        <h3 class="lightbox-title" id="lbTitle">Treatment <em>Result</em></h3>
+        <div class="lightbox-gold-line"></div>
+        <p class="lightbox-text" id="lbText"></p>
+        <div class="lightbox-badge" id="lbBadge">✦ KMC — Khateeb Medical Clinic</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<section id="booking">
+  <div class="booking-inner">
+    <div class="booking-info-card reveal-left">
+      <div class="section-label">Reserve Your Visit</div>
+      <h2 class="section-h2">Begin Your<br><em>Journey</em></h2>
+      <p style="font-size:.9rem;line-height:1.9;color:var(--muted);margin-top:20px;">
+        Schedule a private consultation with Dr. Nashwan and receive a personalized treatment plan crafted exclusively for your aesthetic goals.
+      </p>
+      <div class="booking-details">
+        <div class="booking-detail-item">
+          <div class="detail-icon">📍</div>
+          <div>
+            <div class="detail-label">Location</div>
+            <div class="detail-value">Suwayda — Al-Mohawari St, Odeon Tower, Fl. 2</div>
+          </div>
+        </div>
+        <div class="booking-detail-item">
+          <div class="detail-icon">📞</div>
+          <div>
+            <div class="detail-label">Phone</div>
+            <div class="detail-value">0930 751 516 · 0936 699 112</div>
+          </div>
+        </div>
+        <div class="booking-detail-item">
+          <div class="detail-icon">🕐</div>
+          <div>
+            <div class="detail-label">Hours</div>
+            <div class="detail-value">Sun – Thu: 9:00 AM – 7:00 PM</div>
+          </div>
+        </div>
+        <div class="booking-detail-item">
+          <div class="detail-icon">📟</div>
+          <div>
+            <div class="detail-label">Al-Ruba'i Line</div>
+            <div class="detail-value">5005</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap reveal-right">
+      <div class="form-title">Book Appointment</div>
+      <form id="appointmentForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your full name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="+963 ..." required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Treatment Interested In</label>
+          <select>
+            <option value="">Select a service...</option>
+            <option>Laser Treatments</option>
+            <option>Botox</option>
+            <option>Dermal Fillers</option>
+            <option>Skin Care</option>
+            <option>Consultation Only</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <input type="date">
+        </div>
+        <div class="form-group">
+          <label>Additional Message</label>
+          <textarea placeholder="Tell us about your goals or any questions..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Confirm Appointment →</button>
+        <div class="success-msg" id="successMsg">✓ Your appointment request has been sent. We'll contact you shortly.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="gold-divider" style="max-width:none;"></div>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div style="max-width:700px;margin:0 auto;text-align:center;" class="reveal">
+    <div class="section-label" style="justify-content:center;text-align:center;">Get In Touch</div>
+    <h2 class="section-h2">Find <em>Us</em></h2>
+    <p class="section-sub" style="margin:16px auto 0;">We're here to answer your questions and guide you toward your most confident, beautiful self.</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card reveal delay-1">
+      <div class="contact-icon">📍</div>
+      <h4>Address</h4>
+      <p>Suwayda, Syria<br>Al-Mohawari Street<br>Odeon Tower, Floor 2</p>
+    </div>
+    <div class="contact-card reveal delay-2">
+      <div class="contact-icon">📞</div>
+      <h4>Phone Lines</h4>
+      <p>
+        <a href="tel:+963930751516">0930 751 516</a><br>
+        <a href="tel:+963936699112">0936 699 112</a><br>
+        <a href="tel:+963221481016">016 221 481</a>
+      </p>
+    </div>
+    <div class="contact-card reveal delay-3">
+      <div class="contact-icon">📟</div>
+      <h4>Al-Ruba'i Line</h4>
+      <p><a href="tel:5005">5005</a></p>
+    </div>
+    <div class="contact-card reveal delay-4">
+      <div class="contact-icon">👨‍⚕️</div>
+      <h4>Lead Physician</h4>
+      <p>Dr. Nashwan Al-Khatib<br>Plastic Surgeon<br>Aesthetic Specialist</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">
+    <img src="img-kmc/1779547444479-removebg-preview.png" alt="KMC">
+    <span>KMC</span>
+  </div>
+  <p class="footer-copy">© 2026 Khateeb Medical Clinic — All rights reserved. Suwayda, Syria.</p>
+</footer>
+
+<!-- ===================================================
+     JAVASCRIPT
+===================================================== -->
+<script>
+/* ---- 3D Card Carousel Lightbox with Typewriter ---- */
+(function(){
+  const lb      = document.getElementById('lightbox');
+  const lbImg   = document.getElementById('lbImg');
+  const lbCat   = document.getElementById('lbCategory');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbText  = document.getElementById('lbText');
+  if(!lb) return;
+
+  let twTimer = null;
+
+  function typewrite(el, text, speed){
+    clearTimeout(twTimer);
+    el.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'tw-cursor';
+    el.appendChild(cursor);
+    let i = 0;
+    (function tick(){
+      if(i < text.length){
+        el.insertBefore(document.createTextNode(text[i]), cursor);
+        i++;
+        twTimer = setTimeout(tick, speed);
+      } else {
+        setTimeout(()=>{ if(cursor.parentNode) cursor.parentNode.removeChild(cursor); }, 900);
+      }
+    })();
+  }
+
+  document.querySelectorAll('.kmc-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const src      = card.getAttribute('data-src') || card.querySelector('.kmc-card-img').src;
+      const category = card.getAttribute('data-category') || 'KMC Gallery';
+      const title    = card.getAttribute('data-title')    || 'Treatment <em>Result</em>';
+      const desc     = card.getAttribute('data-desc')     || '';
+
+      lbImg.src = src;
+      lbCat.textContent = category;
+      lbTitle.innerHTML = title;
+      lbText.innerHTML  = '';
+
+      lb.classList.add('open');
+      document.getElementById('kmcCarousel').style.animationPlayState = 'paused';
+      document.body.style.overflow = 'hidden';
+
+      clearTimeout(twTimer);
+      const isMobile = window.innerWidth <= 768;
+      setTimeout(()=>{ typewrite(lbText, desc, isMobile ? 14 : 22); }, isMobile ? 200 : 820);
+    });
+  });
+
+  function closeLightbox(){
+    lb.classList.remove('open');
+    clearTimeout(twTimer);
+    document.getElementById('kmcCarousel').style.animationPlayState = '';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lbClose').onclick = closeLightbox;
+  lb.addEventListener('click', e => { if(e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+
+  /* Swipe down to close on mobile */
+  let touchStartY = 0;
+  const lbInner = lb.querySelector('.lightbox-inner');
+  lb.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive:true});
+  lb.addEventListener('touchend', e => {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if(dy > 80) closeLightbox();
+  }, {passive:true});
+})();
+
+/* ---- Mobile tap-to-pause carousel ---- */
+(function(){
+  const carousel = document.getElementById('kmcCarousel');
+  if(!carousel) return;
+  let paused = false;
+  // Only on touch devices — desktop uses CSS :hover
+  if('ontouchstart' in window){
+    carousel.parentElement.addEventListener('touchstart', () => {
+      carousel.style.animationPlayState = 'paused';
+      paused = true;
+    }, {passive:true});
+    carousel.parentElement.addEventListener('touchend', () => {
+      setTimeout(()=>{
+        if(paused){ carousel.style.animationPlayState = ''; paused = false; }
+      }, 1800);
+    }, {passive:true});
+  }
+})();
+/* ---- Animated Counters ---- */
+(function(){
+  function easeOutQuart(t){ return 1 - Math.pow(1 - t, 4); }
+
+  function animateCounter(el){
+    const target   = +el.getAttribute('data-target');
+    const suffix   = el.getAttribute('data-suffix') || '';
+    const duration = 2000;
+    const start    = performance.now();
+    function step(now){
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round(easeOutQuart(progress) * target) + suffix;
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // يشتغل فور تحميل الصفحة مع تأخير بسيط لكل رقم
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.stat-num[data-target]').forEach((el, i) => {
+      setTimeout(() => animateCounter(el), 600 + i * 200);
+    });
+  });
+})();
+const cur = document.getElementById('cursor');
+const curRing = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function animCur(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  curRing.style.left=rx+'px';curRing.style.top=ry+'px';
+  requestAnimationFrame(animCur);
+})();
+
+/* ---- Navbar scroll ---- */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ---- Mobile menu ---- */
+document.getElementById('menuBtn').onclick=()=>{
+  document.getElementById('navLinks').classList.toggle('active');
+};
+
+/* ---- Form ---- */
+document.getElementById('appointmentForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const msg=document.getElementById('successMsg');
+  msg.style.display='block';
+  setTimeout(()=>{msg.style.display='none';},6000);
+  e.target.reset();
+});
+
+/* ---- Scroll Reveal ---- */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');}});
+},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
+
+/* ---- Three.js Background ---- */
+(function(){
+  const canvas=document.getElementById('bg-canvas');
+  const W=window.innerWidth,H=window.innerHeight;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(75,W/H,.1,1000);
+  camera.position.z=6;
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false});
+  renderer.setSize(W,H);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+
+  // Layer 1: golden star particles
+  const COUNT=window.innerWidth<768?1200:3000;
+  const pos=new Float32Array(COUNT*3);
+  const col=new Float32Array(COUNT*3);
+  const sizes=new Float32Array(COUNT);
+  const goldenColors=[
+    [0.82,0.64,0.27],[0.93,0.73,0.42],[0.97,0.88,0.63],[0.72,0.52,0.18]
+  ];
+  for(let i=0;i<COUNT;i++){
+    pos[i*3]=(Math.random()-.5)*22;
+    pos[i*3+1]=(Math.random()-.5)*22;
+    pos[i*3+2]=(Math.random()-.5)*12;
+    const c=goldenColors[Math.floor(Math.random()*goldenColors.length)];
+    col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];
+    sizes[i]=Math.random()*.018+.004;
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  geo.setAttribute('size',new THREE.BufferAttribute(sizes,1));
+
+  const mat=new THREE.PointsMaterial({
+    size:.018,vertexColors:true,transparent:true,opacity:.75,
+    sizeAttenuation:true,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  const pts=new THREE.Points(geo,mat);
+  scene.add(pts);
+
+  // Layer 2: larger glowing particles
+  const COUNT2=60;
+  const pos2=new Float32Array(COUNT2*3);
+  for(let i=0;i<COUNT2;i++){
+    pos2[i*3]=(Math.random()-.5)*18;
+    pos2[i*3+1]=(Math.random()-.5)*18;
+    pos2[i*3+2]=(Math.random()-.5)*8;
+  }
+  const geo2=new THREE.BufferGeometry();
+  geo2.setAttribute('position',new THREE.BufferAttribute(pos2,3));
+  const mat2=new THREE.PointsMaterial({
+    size:.08,color:new THREE.Color(.82,.64,.27),
+    transparent:true,opacity:.35,sizeAttenuation:true,
+    depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  const pts2=new THREE.Points(geo2,mat2);
+  scene.add(pts2);
+
+  // Ambient light trails (lines)
+  const lineMat=new THREE.LineBasicMaterial({
+    color:0xc9933a,transparent:true,opacity:.04,blending:THREE.AdditiveBlending
+  });
+  for(let i=0;i<6;i++){
+    const lGeo=new THREE.BufferGeometry();
+    const lPos=new Float32Array(6);
+    lPos[0]=(Math.random()-.5)*16;lPos[1]=(Math.random()-.5)*16;lPos[2]=(Math.random()-.5)*6;
+    lPos[3]=(Math.random()-.5)*16;lPos[4]=(Math.random()-.5)*16;lPos[5]=(Math.random()-.5)*6;
+    lGeo.setAttribute('position',new THREE.BufferAttribute(lPos,3));
+    scene.add(new THREE.Line(lGeo,lineMat));
+  }
+
+  let scrollY=0;
+  window.addEventListener('scroll',()=>{scrollY=window.scrollY;});
+  let mx2=0,my2=0;
+  window.addEventListener('mousemove',e=>{mx2=e.clientX/window.innerWidth-.5;my2=e.clientY/window.innerHeight-.5;});
+
+  let t=0;
+  (function anim(){
+    requestAnimationFrame(anim);
+    t+=.005;
+    pts.rotation.y=t*.12+scrollY*.0002;
+    pts.rotation.x=t*.04+scrollY*.0001;
+    pts2.rotation.y=-t*.08;
+    pts2.rotation.x=t*.03;
+    camera.position.x+=(mx2*.8-camera.position.x)*.03;
+    camera.position.y+=(-my2*.5-camera.position.y)*.03;
+    camera.lookAt(scene.position);
+    renderer.render(scene,camera);
+  })();
+
+  window.addEventListener('resize',()=>{
+    const nW=window.innerWidth,nH=window.innerHeight;
+    camera.aspect=nW/nH;camera.updateProjectionMatrix();
+    renderer.setSize(nW,nH);
+  });
+
+})();
+</script>
+</body>
+</html>
