@@ -1346,6 +1346,160 @@ footer{
 .delay-3{transition-delay:.3s}
 .delay-4{transition-delay:.4s}
 .delay-5{transition-delay:.5s}
+/* =========================================
+   LANGUAGE SWITCHER
+========================================= */
+.lang-switcher{
+  position:relative;
+  margin-inline:14px;
+  display:flex;align-items:center;
+  z-index:60;
+}
+.lang-btn{
+  position:relative;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 14px 9px 12px;
+  background:linear-gradient(135deg, rgba(201,147,58,.18), rgba(201,147,58,.06));
+  color:var(--gold-lt, #e6c277);
+  border:1px solid rgba(201,147,58,.45);
+  border-radius:999px;
+  font-family:'Outfit',sans-serif;
+  font-size:.78rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;
+  cursor:pointer;
+  overflow:hidden;
+  transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease, color .35s ease;
+  box-shadow:0 0 0 0 rgba(201,147,58,.0), 0 6px 18px rgba(0,0,0,.35);
+  backdrop-filter:blur(8px);
+}
+.lang-btn:hover{
+  transform:translateY(-1px);
+  border-color:var(--gold, #c9933a);
+  color:#fff;
+  box-shadow:0 0 22px rgba(201,147,58,.45), 0 10px 26px rgba(0,0,0,.5);
+}
+.lang-globe{
+  width:18px;height:18px;
+  color:currentColor;
+  animation:langSpin 14s linear infinite;
+  filter:drop-shadow(0 0 6px rgba(201,147,58,.45));
+  transition:transform .4s ease;
+}
+.lang-btn:hover .lang-globe{animation-duration:4s;}
+@keyframes langSpin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+.lang-current{
+  position:relative;z-index:2;
+  font-weight:600;
+}
+/* Orbiting dot around the button */
+.lang-orbit{
+  position:absolute;inset:-2px;
+  border-radius:999px;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg,
+      transparent 0deg,
+      rgba(201,147,58,.0) 200deg,
+      rgba(201,147,58,.85) 320deg,
+      rgba(255,224,160,1) 350deg,
+      transparent 360deg);
+  -webkit-mask:radial-gradient(circle, transparent 58%, #000 60%);
+          mask:radial-gradient(circle, transparent 58%, #000 60%);
+  animation:langOrbit 5s linear infinite;
+  opacity:.85;
+}
+@keyframes langOrbit{
+  to{transform:rotate(360deg);}
+}
+/* Soft pulse halo to attract attention */
+.lang-pulse{
+  position:absolute;inset:0;
+  border-radius:999px;
+  pointer-events:none;
+  box-shadow:0 0 0 0 rgba(201,147,58,.55);
+  animation:langPulse 2.6s ease-out infinite;
+}
+@keyframes langPulse{
+  0%  {box-shadow:0 0 0 0 rgba(201,147,58,.55);}
+  70% {box-shadow:0 0 0 14px rgba(201,147,58,0);}
+  100%{box-shadow:0 0 0 0 rgba(201,147,58,0);}
+}
+
+/* Dropdown menu */
+.lang-menu{
+  position:absolute;
+  top:calc(100% + 12px);
+  right:0;
+  min-width:200px;
+  padding:8px;
+  background:linear-gradient(180deg, rgba(18,15,12,.96), rgba(10,9,8,.96));
+  border:1px solid rgba(201,147,58,.35);
+  border-radius:14px;
+  box-shadow:0 24px 60px rgba(0,0,0,.6), 0 0 22px rgba(201,147,58,.18);
+  backdrop-filter:blur(14px);
+  opacity:0;
+  transform:translateY(-8px) scale(.96);
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:80;
+}
+.lang-switcher.open .lang-menu{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+.lang-option{
+  width:100%;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:10px;
+  color:#e9e3d6;
+  font-family:'Outfit',sans-serif;
+  font-size:.85rem;
+  letter-spacing:.05em;
+  cursor:pointer;
+  transition:background .25s ease, border-color .25s ease, transform .2s ease;
+}
+.lang-option + .lang-option{margin-top:2px;}
+.lang-option:hover{
+  background:rgba(201,147,58,.10);
+  border-color:rgba(201,147,58,.45);
+  transform:translateX(-2px);
+}
+.lang-option.active{
+  background:rgba(201,147,58,.18);
+  border-color:var(--gold, #c9933a);
+  color:#fff;
+}
+.lang-flag{font-size:1.15rem;line-height:1;}
+.lang-name{flex:1;text-align:left;}
+.lang-code{
+  font-size:.7rem;letter-spacing:.18em;
+  color:var(--gold-lt,#e6c277);
+  opacity:.8;
+}
+
+/* Hide Google Translate banner/branding */
+.goog-te-banner-frame.skiptranslate,
+.goog-logo-link,
+.goog-te-gadget span,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd{display:none !important;}
+body{top:0 !important;}
+.goog-te-gadget{height:0;overflow:hidden;}
+
+@media (max-width:768px){
+  .lang-btn .lang-current{display:none;}
+  .lang-btn{padding:9px 11px;}
+  .lang-menu{right:-6px;min-width:180px;}
+}
+
 </style>
 </head>
 <body>
@@ -1369,10 +1523,36 @@ footer{
   <ul class="nav-links" id="navLinks">
     <li><a href="#doctor">Doctor</a></li>
     <li><a href="#services">Services</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#testimonials">Gallery</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+
+  <!-- ===== LANGUAGE SWITCHER ===== -->
+  <div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn" id="langBtn" aria-label="Change language" aria-haspopup="true">
+      <span class="lang-orbit"></span>
+      <svg class="lang-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18"/>
+        <path d="M12 3a14 14 0 0 1 0 18"/>
+        <path d="M12 3a14 14 0 0 0 0 18"/>
+      </svg>
+      <span class="lang-current" id="langCurrent">EN</span>
+      <span class="lang-pulse"></span>
+    </button>
+    <div class="lang-menu" id="langMenu" role="menu">
+      <button class="lang-option" data-lang="en" role="menuitem">
+        <span class="lang-flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-code">EN</span>
+      </button>
+      <button class="lang-option" data-lang="ar" role="menuitem">
+        <span class="lang-flag">🇸🇦</span><span class="lang-name">العربية</span><span class="lang-code">AR</span>
+      </button>
+      <button class="lang-option" data-lang="ru" role="menuitem">
+        <span class="lang-flag">🇷🇺</span><span class="lang-name">Русский</span><span class="lang-code">RU</span>
+      </button>
+    </div>
+  </div>
+
   <button class="nav-cta" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book Now</button>
   <div class="menu-btn" id="menuBtn">☰</div>
 </nav>
@@ -1611,7 +1791,7 @@ footer{
     </div>
 
     <p class="kmc-hint kmc-hint-desktop">✦ Hover to pause &nbsp;·&nbsp; Click to zoom ✦</p>
-    <p class="kmc-hint kmc-hint-mobile">✦ اضغط على أي بطاقة لتكبيرها ✦</p>
+    <p class="kmc-hint kmc-hint-mobile">✦ Click here to zoom in✦</p>
 
   </div>
 
@@ -1644,17 +1824,31 @@ footer{
       </p>
       <div class="booking-details">
         <div class="booking-detail-item">
-          <div class="detail-icon">📍</div>
+          <div class="detail-icon">🏛️</div>
           <div>
-            <div class="detail-label">Location</div>
-            <div class="detail-value">Suwayda — Al-Mohawari St, Odeon Tower, Fl. 2</div>
+            <div class="detail-label">Suwayda — Main Branch</div>
+            <div class="detail-value">Al-Mohawari St, Odeon Tower, Fl. 2<br><a href="tel:+963930751516" style="color:var(--text);text-decoration:none;">0930 751 516</a> · <a href="tel:+963936699112" style="color:var(--text);text-decoration:none;">0936 699 112</a></div>
           </div>
         </div>
         <div class="booking-detail-item">
-          <div class="detail-icon">📞</div>
+          <div class="detail-icon">🏙️</div>
           <div>
-            <div class="detail-label">Phone</div>
-            <div class="detail-value">0930 751 516 · 0936 699 112</div>
+            <div class="detail-label">Damascus — Abu Rummaneh Branch</div>
+            <div class="detail-value">From Al-Rawda Square → Abu Rummaneh main street → turn into the alley opposite the Saudi Embassy → KMC Clinics<br><a href="tel:+963113301172" style="color:var(--text);text-decoration:none;">011 (3330 172)</a> · <a href="tel:+963905014050" style="color:var(--text);text-decoration:none;">0995 014 050</a></div>
+          </div>
+        </div>
+        <div class="booking-detail-item">
+          <div class="detail-icon">🌆</div>
+          <div>
+            <div class="detail-label">Rif Dimashq — Jaramana Branch</div>
+            <div class="detail-value">Al-Baladiyeh District, opposite Al-Baraem Hospital<br><a href="tel:+963905014050" style="color:var(--text);text-decoration:none;">0995 014 050</a></div>
+          </div>
+        </div>
+        <div class="booking-detail-item">
+          <div class="detail-icon">🌍</div>
+          <div>
+            <div class="detail-label">Moscow — Russia Branch</div>
+            <div class="detail-value">International Branch — Moscow, Russia</div>
           </div>
         </div>
         <div class="booking-detail-item">
@@ -1685,6 +1879,16 @@ footer{
             <label>Phone Number</label>
             <input type="tel" placeholder="+963 ..." required>
           </div>
+        </div>
+        <div class="form-group">
+          <label>Preferred Branch / Location</label>
+          <select required>
+            <option value="">Select a branch...</option>
+            <option value="suwayda">Suwayda — Main Branch</option>
+            <option value="damascus">Damascus — Abu Rummaneh</option>
+            <option value="jaramana">Rif Dimashq — Jaramana</option>
+            <option value="moscow">Moscow — Russia</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Treatment Interested In</label>
@@ -1723,28 +1927,35 @@ footer{
   </div>
   <div class="contact-grid">
     <div class="contact-card reveal delay-1">
-      <div class="contact-icon">📍</div>
-      <h4>Address</h4>
-      <p>Suwayda, Syria<br>Al-Mohawari Street<br>Odeon Tower, Floor 2</p>
+      <div class="contact-icon">🏛️</div>
+      <h4>Suwayda — Main</h4>
+      <p>
+        Al-Mohawari Street<br>Odeon Tower, Floor 2<br>
+        <a href="tel:+963930751516">0930 751 516</a><br>
+        <a href="tel:+963936699112">0936 699 112</a>
+      </p>
     </div>
     <div class="contact-card reveal delay-2">
-      <div class="contact-icon">📞</div>
-      <h4>Phone Lines</h4>
+      <div class="contact-icon">🏙️</div>
+      <h4>Damascus — Abu Rummaneh</h4>
       <p>
-        <a href="tel:+963930751516">0930 751 516</a><br>
-        <a href="tel:+963936699112">0936 699 112</a><br>
-        <a href="tel:+963221481016">016 221 481</a>
+        From Al-Rawda Square, enter Abu Rummaneh main street, then turn into the alley opposite the Saudi Embassy — KMC Clinics.<br>
+        <a href="tel:+963113301172">011 (3330 172)</a><br>
+        <a href="tel:+963905014050">0995 014 050</a>
       </p>
     </div>
     <div class="contact-card reveal delay-3">
-      <div class="contact-icon">📟</div>
-      <h4>Al-Ruba'i Line</h4>
-      <p><a href="tel:5005">5005</a></p>
+      <div class="contact-icon">🌆</div>
+      <h4>Rif Dimashq — Jaramana</h4>
+      <p>
+        Al-Baladiyeh District<br>Opposite Al-Baraem Hospital<br>
+        <a href="tel:+963905014050">0995 014 050</a>
+      </p>
     </div>
     <div class="contact-card reveal delay-4">
-      <div class="contact-icon">👨‍⚕️</div>
-      <h4>Lead Physician</h4>
-      <p>Dr. Nashwan Al-Khatib<br>Plastic Surgeon<br>Aesthetic Specialist</p>
+      <div class="contact-icon">🌍</div>
+      <h4>Moscow — Russia</h4>
+      <p>International Branch<br>Moscow, Russian Federation</p>
     </div>
   </div>
 </section>
@@ -2005,6 +2216,570 @@ document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obse
     renderer.setSize(nW,nH);
   });
 
+})();
+</script>
+<!-- ===== LANGUAGE SWITCHER (Full page text translation) ===== -->
+<script>
+(function(){
+  const switcher = document.getElementById('langSwitcher');
+  const btn      = document.getElementById('langBtn');
+  const menu     = document.getElementById('langMenu');
+  const current  = document.getElementById('langCurrent');
+  const options  = menu.querySelectorAll('.lang-option');
+  const form      = document.getElementById('appointmentForm');
+  const successMsg = document.getElementById('successMsg');
+
+  const dict = {
+    en: {
+      pageTitle: 'KMC — Khateeb Medical Clinic',
+      navDoctor: 'Doctor',
+      navServices: 'Services',
+      navGallery: 'Gallery',
+      navContact: 'Contact',
+      navCta: 'Book Now',
+      heroLabel: 'Premium Medical Aesthetics',
+      heroLine1: 'The Art of',
+      heroLine2: 'Refined Beauty',
+      heroText: 'Experience world-class cosmetic treatments and precision-crafted aesthetic medicine at KMC — where science meets artistry.',
+      heroBtn: 'Book Consultation',
+      heroBtn2: 'Our Services',
+      statYears: 'Years Experience',
+      statClients: 'Satisfied Clients',
+      statLaser: 'Laser Systems',
+      scroll: 'Scroll',
+      doctorLabel: 'Meet Your Specialist',
+      doctorName1: 'Dr. Nashwan',
+      doctorName2: 'Al-Khatib',
+      doctorBio: 'A board-certified plastic surgeon and aesthetic specialist with over a decade of expertise in advanced cosmetic procedures. Dr. Nashwan combines surgical precision with an artistic eye — delivering naturally beautiful, transformative results tailored to each individual.',
+      doctorTag1: 'Plastic Surgery',
+      doctorTag2: 'Botox & Fillers',
+      doctorTag3: 'Laser Specialist',
+      doctorTag4: 'Skin Rejuvenation',
+      doctorTag5: 'Aesthetic Medicine',
+      servicesLabel: 'What We Offer',
+      servicesTitle1: 'Premium',
+      servicesTitle2: 'Treatments',
+      servicesSub: 'Cutting-edge aesthetic technologies delivered with clinical excellence and a commitment to natural results.',
+      service1Title: 'Laser Treatments',
+      service1Text: 'MotusAY · MotusAX · Again — three elite laser systems for hair removal, skin rejuvenation, and pigmentation correction.',
+      service2Title: 'Botox',
+      service2Text: 'Elegant anti-aging injections that relax expression lines while preserving natural movement and facial harmony.',
+      service3Title: 'Dermal Fillers',
+      service3Text: 'Restore lost volume, sculpt contours, and achieve youthful radiance with premium hyaluronic acid fillers.',
+      service4Title: 'Luxury Skin Care',
+      service4Text: 'Medical-grade facial treatments, mesotherapy, and custom skincare protocols for luminous, healthy skin.',
+      galleryLabel: 'Results Gallery',
+      galleryTitle1: 'Our',
+      galleryTitle2: 'Transformations',
+      galleryHint: 'Hover to pause — click any card to enlarge',
+      galleryHintMobile: '✦ Tap any card to enlarge ✦',
+      galleryCenter: 'Gallery',
+      bookingLabel: 'Reserve Your Visit',
+      bookingTitle1: 'Begin Your',
+      bookingTitle2: 'Journey',
+      bookingSub: 'Schedule a private consultation with Dr. Nashwan and receive a personalized treatment plan crafted exclusively for your aesthetic goals.',
+      branch1: 'Suwayda — Main Branch',
+      branch2: 'Damascus — Abu Rummaneh Branch',
+      branch2Text: 'From Al-Rawda Square → Abu Rummaneh main street → turn into the alley opposite the Saudi Embassy → KMC Clinics',
+      branch3: 'Rif Dimashq — Jaramana Branch',
+      branch3Text: 'Al-Baladiyeh District, opposite Al-Baraem Hospital',
+      branch4: 'Moscow — Russia Branch',
+      branch4Text: 'International Branch — Moscow, Russia',
+      bookingHours: 'Hours',
+      bookingHoursText: 'Sun – Thu: 9:00 AM – 7:00 PM',
+      bookingLine: "Al-Ruba'i Line",
+      bookingExt: '5005',
+      formTitle: 'Book Appointment',
+      fullName: 'Full Name',
+      phoneNumber: 'Phone Number',
+      preferredBranch: 'Preferred Branch / Location',
+      selectBranch: 'Select a branch...',
+      branchOption1: 'Suwayda — Main Branch',
+      branchOption2: 'Damascus — Abu Rummaneh',
+      branchOption3: 'Rif Dimashq — Jaramana',
+      branchOption4: 'Moscow — Russia',
+      treatmentInterested: 'Treatment Interested In',
+      selectService: 'Select a service...',
+      treatment1: 'Laser Treatments',
+      treatment2: 'Botox',
+      treatment3: 'Dermal Fillers',
+      treatment4: 'Skin Care',
+      treatment5: 'Consultation Only',
+      preferredDate: 'Preferred Date',
+      additionalMessage: 'Additional Message',
+      submit: 'Confirm Appointment →',
+      success: "✓ Your appointment request has been sent. We'll contact you shortly.",
+      contactLabel: 'Get In Touch',
+      contactTitle1: 'Find',
+      contactTitle2: 'Us',
+      contactSub: "We're here to answer your questions and guide you toward your most confident, beautiful self.",
+      contactBranch1: 'Suwayda — Main',
+      contactStreet1: 'Al-Mohawari Street',
+      contactStreet2: 'Odeon Tower, Floor 2',
+      contactBranch2Desc: 'From Al-Rawda Square, enter Abu Rummaneh main street, then turn into the alley opposite the Saudi Embassy — KMC Clinics.',
+      contactBranch3a: 'Al-Baladiyeh District',
+      contactBranch3b: 'Opposite Al-Baraem Hospital',
+      contactBranch4a: 'International Branch',
+      contactBranch4b: 'Moscow, Russian Federation',
+      footer: '© 2026 Khateeb Medical Clinic — All rights reserved. Suwayda, Syria.',
+      lbBadge: '✦ KMC — Khateeb Medical Clinic',
+      card0Category: 'Laser Sculpting',
+      card0Title: 'Body <em>Sculpting</em>',
+      card0Desc: 'Advanced laser body contouring using our elite MotusAY system — precisely targeting stubborn fat deposits and tightening skin for a naturally defined silhouette. Results are visible from the first session, with full transformation achieved over a personalised treatment plan.',
+      card0Label: 'Body sculpting',
+      card1Category: 'Fat Reduction',
+      card1Title: 'Non-Surgical <em>Fat Removal</em>',
+      card1Desc: 'Our non-invasive fat reduction protocol delivers exceptional results without surgery or downtime. Using targeted energy to break down fat cells, the body naturally eliminates them over the following weeks — revealing smoother, slimmer contours that last.',
+      card1Label: 'fat removal',
+      card2Category: 'Dermal Fillers',
+      card2Title: 'Volume & <em>Contouring</em>',
+      card2Desc: 'Premium hyaluronic acid fillers expertly placed by Dr. Nashwan to restore youthful volume, sculpt cheekbones, refine lips, and harmonise facial proportions — all with an utterly natural finish that enhances your unique features.',
+      card2Label: 'Fillers',
+      card3Category: 'Luxury Skin Care',
+      card3Title: 'Radiant <em>Skin</em>',
+      card3Desc: 'Medical-grade skin rejuvenation combining mesotherapy, bespoke serums, and advanced protocols to target pigmentation, uneven texture, and dullness. Each treatment is custom-designed for your skin type — delivering a luminous, healthy glow that lasts.',
+      card3Label: 'Skincare',
+      card4Category: 'Treatment Result',
+      card4Title: 'Before & <em>After</em>',
+      card4Desc: 'Real results from real clients at KMC. Every transformation is a testament to our commitment to precision, safety, and natural beauty. Dr. Nashwan\'s approach ensures outcomes that complement your individual features — never overdone, always refined.',
+      card4Label: 'Result',
+      card5Category: 'Our Team',
+      card5Title: 'The KMC <em>Experts</em>',
+      card5Desc: 'Led by Dr. Nashwan Al-Khatib — board-certified plastic surgeon and aesthetic specialist — our dedicated team brings together clinical excellence and a genuine passion for beauty. Every client is treated with the highest standards of care, privacy, and professionalism.',
+      card5Label: 'Team',
+      langAria: 'Change language'
+    },
+    ar: {
+      pageTitle: 'KMC — مركز الخطيب الطبي',
+      navDoctor: 'الطبيب',
+      navServices: 'الخدمات',
+      navGallery: 'المعرض',
+      navContact: 'التواصل',
+      navCta: 'احجز الآن',
+      heroLabel: 'الطب التجميلي الراقي',
+      heroLine1: 'فن',
+      heroLine2: 'الجمال المتقن',
+      heroText: 'اختبر علاجات تجميل عالمية المستوى وطبًا تجميليًا دقيقًا في KMC حيث يلتقي العلم مع الفن.',
+      heroBtn: 'احجز استشارة',
+      heroBtn2: 'خدماتنا',
+      statYears: 'سنوات من الخبرة',
+      statClients: 'عميل راضٍ',
+      statLaser: 'أنظمة ليزر',
+      scroll: 'مرّر',
+      doctorLabel: 'تعرّف إلى الاختصاصي',
+      doctorName1: 'د. نشوان',
+      doctorName2: 'الخطيب',
+      doctorBio: 'جرّاح تجميل واختصاصي طب جمالي معتمد يملك أكثر من عقد من الخبرة في الإجراءات التجميلية المتقدمة. يجمع د. نشوان بين الدقة الجراحية والرؤية الفنية ليقدّم نتائج طبيعية وجميلة ومصممة لكل حالة.',
+      doctorTag1: 'الجراحة التجميلية',
+      doctorTag2: 'بوتوكس وفيلر',
+      doctorTag3: 'اختصاصي ليزر',
+      doctorTag4: 'تجديد البشرة',
+      doctorTag5: 'الطب الجمالي',
+      servicesLabel: 'ما الذي نقدمه',
+      servicesTitle1: 'علاجات',
+      servicesTitle2: 'متميزة',
+      servicesSub: 'تقنيات تجميل متطورة تُقدَّم بتميّز سريري والتزام بنتائج طبيعية.',
+      service1Title: 'علاجات الليزر',
+      service1Text: 'MotusAY و MotusAX و Again — ثلاثة أنظمة ليزر متقدمة لإزالة الشعر وتجديد البشرة ومعالجة التصبغات.',
+      service2Title: 'البوتوكس',
+      service2Text: 'حقن أنيقة لمكافحة الشيخوخة تُرخي خطوط التعبير مع الحفاظ على الحركة الطبيعية وتناسق الوجه.',
+      service3Title: 'الفيلر',
+      service3Text: 'استعد الحجم المفقود وحدد الملامح واحصل على إشراقة شبابية باستخدام أفضل أنواع حمض الهيالورونيك.',
+      service4Title: 'العناية الفاخرة بالبشرة',
+      service4Text: 'علاجات وجه طبية وميزوثيرابي وبروتوكولات عناية مخصصة لبشرة صحية ومضيئة.',
+      galleryLabel: 'معرض النتائج',
+      galleryTitle1: 'أبرز',
+      galleryTitle2: 'التحولات',
+      galleryHint: 'مرّر فوق البطاقة لإيقاف الحركة — واضغط للتكبير',
+      galleryHintMobile: '✦ اضغط على أي بطاقة لتكبيرها ✦',
+      galleryCenter: 'المعرض',
+      bookingLabel: 'احجز زيارتك',
+      bookingTitle1: 'ابدأ',
+      bookingTitle2: 'رحلتك',
+      bookingSub: 'حدّد استشارة خاصة مع د. نشوان واحصل على خطة علاج شخصية مصممة لأهدافك الجمالية.',
+      branch1: 'السويداء — الفرع الرئيسي',
+      branch2: 'دمشق — فرع أبو رمانة',
+      branch2Text: 'من ساحة الروضة → شارع أبو رمانة الرئيسي → الالتفاف نحو الحارة المقابلة للسفارة السعودية → عيادات KMC',
+      branch3: 'ريف دمشق — جرمانا',
+      branch3Text: 'حي البلدية، مقابل مشفى البراعم',
+      branch4: 'موسكو — روسيا',
+      branch4Text: 'الفرع الدولي — موسكو، روسيا',
+      bookingHours: 'ساعات العمل',
+      bookingHoursText: 'الأحد – الخميس: 9:00 صباحًا – 7:00 مساءً',
+      bookingLine: 'الخط الرباعي',
+      bookingExt: '5005',
+      formTitle: 'حجز موعد',
+      fullName: 'الاسم الكامل',
+      phoneNumber: 'رقم الهاتف',
+      preferredBranch: 'الفرع / المنطقة المفضلة',
+      selectBranch: 'اختر الفرع...',
+      branchOption1: 'السويداء — الفرع الرئيسي',
+      branchOption2: 'دمشق — أبو رمانة',
+      branchOption3: 'ريف دمشق — جرمانا',
+      branchOption4: 'موسكو — روسيا',
+      treatmentInterested: 'العلاج المطلوب',
+      selectService: 'اختر الخدمة...',
+      treatment1: 'علاجات الليزر',
+      treatment2: 'بوتوكس',
+      treatment3: 'فيلر',
+      treatment4: 'العناية بالبشرة',
+      treatment5: 'استشارة فقط',
+      preferredDate: 'التاريخ المفضل',
+      additionalMessage: 'ملاحظات إضافية',
+      submit: 'تأكيد الموعد ←',
+      success: '✓ تم إرسال طلب الموعد بنجاح، وسنتواصل معك قريبًا.',
+      contactLabel: 'تواصل معنا',
+      contactTitle1: 'اعثر',
+      contactTitle2: 'علينا',
+      contactSub: 'نحن هنا للإجابة عن أسئلتك ومساعدتك للوصول إلى أجمل نسخة واثقة من نفسك.',
+      contactBranch1: 'السويداء — الرئيسي',
+      contactStreet1: 'شارع المحوري',
+      contactStreet2: 'برج أوديون، الطابق الثاني',
+      contactBranch2Desc: 'من ساحة الروضة، ادخل شارع أبو رمانة الرئيسي ثم انعطف إلى الحارة المقابلة للسفارة السعودية — عيادات KMC.',
+      contactBranch3a: 'حي البلدية',
+      contactBranch3b: 'مقابل مشفى البراعم',
+      contactBranch4a: 'الفرع الدولي',
+      contactBranch4b: 'موسكو، روسيا',
+      footer: '© 2026 مركز الخطيب الطبي — جميع الحقوق محفوظة. السويداء، سوريا.',
+      lbBadge: '✦ KMC — مركز الخطيب الطبي',
+      card0Category: 'نحت بالليزر',
+      card0Title: 'نحت <em>الجسم</em>',
+      card0Desc: 'نحت متقدم للجسم بالليزر باستخدام نظام MotusAY المتطور لاستهداف تراكمات الدهون وشد البشرة للوصول إلى قوام طبيعي ومتناسق. تظهر النتائج من الجلسة الأولى وتكتمل ضمن خطة علاج مخصصة.',
+      card0Label: 'نحت الجسم',
+      card1Category: 'إزالة الدهون',
+      card1Title: 'إزالة <em>الدهون</em> بدون جراحة',
+      card1Desc: 'بروتوكول غير جراحي لتقليل الدهون بنتائج واضحة من دون جراحة أو فترة نقاهة. تعمل الطاقة الموجهة على تفكيك الخلايا الدهنية ليتخلص منها الجسم تدريجيًا خلال الأسابيع التالية.',
+      card1Label: 'إزالة الدهون',
+      card2Category: 'الفيلر',
+      card2Title: 'حجم و<em>تحديد</em>',
+      card2Desc: 'فيلر حمض الهيالورونيك الممتاز يُطبَّق بخبرة من د. نشوان لاستعادة الحجم وتحديد الوجنتين وتحسين الشفاه وتحقيق تناسق طبيعي للوجه.',
+      card2Label: 'فيلر',
+      card3Category: 'العناية الفاخرة بالبشرة',
+      card3Title: 'بشرة <em>مشرقة</em>',
+      card3Desc: 'تجديد طبي للبشرة يجمع بين الميزوثيرابي والسيرومات المخصصة والبروتوكولات المتقدمة لمعالجة التصبغات والملمس غير المتجانس والبهتان.',
+      card3Label: 'العناية بالبشرة',
+      card4Category: 'نتيجة العلاج',
+      card4Title: 'قبل <em>وبعد</em>',
+      card4Desc: 'نتائج حقيقية لعملاء حقيقيين في KMC. كل تحول يعكس التزامنا بالدقة والأمان والجمال الطبيعي، مع نتائج منسجمة مع ملامح كل شخص.',
+      card4Label: 'النتيجة',
+      card5Category: 'فريقنا',
+      card5Title: 'خبراء <em>KMC</em>',
+      card5Desc: 'بقيادة د. نشوان الخطيب، جرّاح التجميل والاختصاصي الجمالي المعتمد، يجمع فريقنا بين التميز السريري والشغف الحقيقي بالجمال مع أعلى معايير العناية والخصوصية والاحترافية.',
+      card5Label: 'الفريق',
+      langAria: 'تغيير اللغة'
+    },
+    ru: {
+      pageTitle: 'KMC — Медицинская клиника Аль-Хатыб',
+      navDoctor: 'Врач',
+      navServices: 'Услуги',
+      navGallery: 'Галерея',
+      navContact: 'Контакты',
+      navCta: 'Записаться',
+      heroLabel: 'Премиальная эстетическая медицина',
+      heroLine1: 'Искусство',
+      heroLine2: 'утончённой красоты',
+      heroText: 'Откройте для себя косметологию мирового уровня и эстетическую медицину высокой точности в KMC — где наука встречается с искусством.',
+      heroBtn: 'Записаться на консультацию',
+      heroBtn2: 'Наши услуги',
+      statYears: 'лет опыта',
+      statClients: 'довольных клиентов',
+      statLaser: 'лазерных систем',
+      scroll: 'Прокрутка',
+      doctorLabel: 'Ваш специалист',
+      doctorName1: 'Д-р Нашван',
+      doctorName2: 'Аль-Хатыб',
+      doctorBio: 'Сертифицированный пластический хирург и специалист по эстетической медицине с более чем десятилетним опытом в современных косметологических процедурах. Д-р Нашван сочетает хирургическую точность и художественный взгляд, создавая естественно красивые результаты.',
+      doctorTag1: 'Пластическая хирургия',
+      doctorTag2: 'Ботокс и филлеры',
+      doctorTag3: 'Лазерный специалист',
+      doctorTag4: 'Омоложение кожи',
+      doctorTag5: 'Эстетическая медицина',
+      servicesLabel: 'Что мы предлагаем',
+      servicesTitle1: 'Премиальные',
+      servicesTitle2: 'процедуры',
+      servicesSub: 'Передовые эстетические технологии, клиническое совершенство и стремление к естественным результатам.',
+      service1Title: 'Лазерные процедуры',
+      service1Text: 'MotusAY · MotusAX · Again — три премиальные лазерные системы для эпиляции, омоложения кожи и коррекции пигментации.',
+      service2Title: 'Ботокс',
+      service2Text: 'Элегантные антивозрастные инъекции, расслабляющие мимические морщины и сохраняющие естественную подвижность лица.',
+      service3Title: 'Дермальные филлеры',
+      service3Text: 'Верните утраченный объём, подчеркните контуры и получите молодое сияние с премиальными филлерами на основе гиалуроновой кислоты.',
+      service4Title: 'Премиальный уход за кожей',
+      service4Text: 'Медицинские уходовые процедуры, мезотерапия и индивидуальные протоколы для здоровой и сияющей кожи.',
+      galleryLabel: 'Галерея результатов',
+      galleryTitle1: 'Наши',
+      galleryTitle2: 'преображения',
+      galleryHint: 'Наведите, чтобы остановить — нажмите для увеличения',
+      galleryHintMobile: '✦ Нажмите на карточку для увеличения ✦',
+      galleryCenter: 'Галерея',
+      bookingLabel: 'Забронируйте визит',
+      bookingTitle1: 'Начните',
+      bookingTitle2: 'свой путь',
+      bookingSub: 'Запишитесь на личную консультацию к д-ру Нашвану и получите индивидуальный план лечения для ваших эстетических целей.',
+      branch1: 'Сувейда — главный филиал',
+      branch2: 'Дамаск — Абу Руммане',
+      branch2Text: 'От площади Аль-Рауда → главная улица Абу Руммане → поворот в переулок напротив посольства Саудовской Аравии → клиники KMC',
+      branch3: 'Риф Димашк — Джарамана',
+      branch3Text: 'Район Аль-Баладия, напротив больницы Аль-Бараем',
+      branch4: 'Москва — Россия',
+      branch4Text: 'Международный филиал — Москва, Россия',
+      bookingHours: 'Часы работы',
+      bookingHoursText: 'Вс – Чт: 9:00 – 19:00',
+      bookingLine: 'Линия Аль-Рубаи',
+      bookingExt: '5005',
+      formTitle: 'Запись на приём',
+      fullName: 'Полное имя',
+      phoneNumber: 'Номер телефона',
+      preferredBranch: 'Предпочтительный филиал / локация',
+      selectBranch: 'Выберите филиал...',
+      branchOption1: 'Сувейда — главный филиал',
+      branchOption2: 'Дамаск — Абу Руммане',
+      branchOption3: 'Риф Димашк — Джарамана',
+      branchOption4: 'Москва — Россия',
+      treatmentInterested: 'Интересующая процедура',
+      selectService: 'Выберите услугу...',
+      treatment1: 'Лазерные процедуры',
+      treatment2: 'Ботокс',
+      treatment3: 'Дермальные филлеры',
+      treatment4: 'Уход за кожей',
+      treatment5: 'Только консультация',
+      preferredDate: 'Предпочтительная дата',
+      additionalMessage: 'Дополнительное сообщение',
+      submit: 'Подтвердить запись →',
+      success: '✓ Ваша заявка на запись отправлена. Мы скоро свяжемся с вами.',
+      contactLabel: 'Свяжитесь с нами',
+      contactTitle1: 'Найдите',
+      contactTitle2: 'нас',
+      contactSub: 'Мы готовы ответить на ваши вопросы и помочь вам приблизиться к самой уверенной и прекрасной версии себя.',
+      contactBranch1: 'Сувейда — главный',
+      contactStreet1: 'Улица Аль-Мохавари',
+      contactStreet2: 'Башня Одеон, 2 этаж',
+      contactBranch2Desc: 'От площади Аль-Рауда, по главной улице Абу Руммане, затем в переулок напротив посольства Саудовской Аравии — клиники KMC.',
+      contactBranch3a: 'Район Аль-Баладия',
+      contactBranch3b: 'Напротив больницы Аль-Бараем',
+      contactBranch4a: 'Международный филиал',
+      contactBranch4b: 'Москва, Российская Федерация',
+      footer: '© 2026 Медицинская клиника Аль-Хатыб — Все права защищены. Сувейда, Сирия.',
+      lbBadge: '✦ KMC — Медицинская клиника Аль-Хатыб',
+      card0Category: 'Лазерное моделирование',
+      card0Title: 'Моделирование <em>тела</em>',
+      card0Desc: 'Современное лазерное моделирование тела с использованием системы MotusAY, точно воздействующей на стойкие жировые отложения и подтягивающей кожу для естественного силуэта.',
+      card0Label: 'Моделирование тела',
+      card1Category: 'Снижение жира',
+      card1Title: 'Удаление <em>жира</em> без операции',
+      card1Desc: 'Неинвазивный протокол снижения жировых отложений с отличными результатами без хирургии и периода восстановления. Организм естественным образом выводит разрушенные клетки в течение следующих недель.',
+      card1Label: 'Удаление жира',
+      card2Category: 'Дермальные филлеры',
+      card2Title: 'Объём и <em>контур</em>',
+      card2Desc: 'Премиальные филлеры на основе гиалуроновой кислоты, профессионально вводимые д-ром Нашваном для восстановления объёма и гармонизации черт лица.',
+      card2Label: 'Филлеры',
+      card3Category: 'Премиальный уход за кожей',
+      card3Title: 'Сияющая <em>кожа</em>',
+      card3Desc: 'Медицинское омоложение кожи с мезотерапией, индивидуальными сыворотками и передовыми протоколами против пигментации, тусклости и неровной текстуры.',
+      card3Label: 'Уход за кожей',
+      card4Category: 'Результат процедуры',
+      card4Title: 'До <em>и после</em>',
+      card4Desc: 'Реальные результаты реальных клиентов KMC. Каждое преображение отражает нашу приверженность точности, безопасности и естественной красоте.',
+      card4Label: 'Результат',
+      card5Category: 'Наша команда',
+      card5Title: 'Эксперты <em>KMC</em>',
+      card5Desc: 'Под руководством д-ра Нашвана Аль-Хатыба наша команда объединяет клиническое совершенство и искреннюю страсть к красоте, соблюдая высочайшие стандарты ухода и конфиденциальности.',
+      card5Label: 'Команда',
+      langAria: 'Сменить язык'
+    }
+  };
+
+  const cardData = [
+    { selector: '.kmc-card[style*="--index:0"]', category: 'card0Category', title: 'card0Title', desc: 'card0Desc', label: 'card0Label' },
+    { selector: '.kmc-card[style*="--index:1"]', category: 'card1Category', title: 'card1Title', desc: 'card1Desc', label: 'card1Label' },
+    { selector: '.kmc-card[style*="--index:2"]', category: 'card2Category', title: 'card2Title', desc: 'card2Desc', label: 'card2Label' },
+    { selector: '.kmc-card[style*="--index:3"]', category: 'card3Category', title: 'card3Title', desc: 'card3Desc', label: 'card3Label' },
+    { selector: '.kmc-card[style*="--index:4"]', category: 'card4Category', title: 'card4Title', desc: 'card4Desc', label: 'card4Label' },
+    { selector: '.kmc-card[style*="--index:5"]', category: 'card5Category', title: 'card5Title', desc: 'card5Desc', label: 'card5Label' }
+  ];
+
+  function setText(selector, value){
+    const el = document.querySelector(selector);
+    if(el) el.textContent = value;
+  }
+
+  function setHtml(selector, value){
+    const el = document.querySelector(selector);
+    if(el) el.innerHTML = value;
+  }
+
+  function setAttr(selector, attr, value){
+    const el = document.querySelector(selector);
+    if(el) el.setAttribute(attr, value);
+  }
+
+  function setOptionText(selectSelector, index, value){
+    const el = document.querySelector(selectSelector);
+    if(el && el.options[index]) el.options[index].textContent = value;
+  }
+
+  function setInner(selector, value){
+    const el = document.querySelector(selector);
+    if(el) el.innerHTML = value;
+  }
+
+  function applyLang(lang){
+    const t = dict[lang] || dict.en;
+    current.textContent = lang.toUpperCase();
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.title = t.pageTitle;
+    btn.setAttribute('aria-label', t.langAria);
+    options.forEach(o => o.classList.toggle('active', o.dataset.lang === lang));
+    localStorage.setItem('kmc_lang', lang);
+    switcher.classList.remove('open');
+
+    setText('nav li:nth-child(1) a', t.navDoctor);
+    setText('nav li:nth-child(2) a', t.navServices);
+    setText('nav li:nth-child(3) a', t.navGallery);
+    setText('nav li:nth-child(4) a', t.navContact);
+    setText('.nav-cta', t.navCta);
+    setText('.hero-eyebrow', t.heroLabel);
+    setInner('.hero-h1', t.heroLine1 + '<br><em>' + t.heroLine2 + '</em><span><b>KMC</b></span>');
+    setText('.hero-desc', t.heroText);
+    setText('.hero .btn-primary span', t.heroBtn);
+    setText('.hero .btn-ghost', t.heroBtn2);
+    setText('.hero-stats .stat-item:nth-child(1) .stat-label', t.statYears);
+    setText('.hero-stats .stat-item:nth-child(2) .stat-label', t.statClients);
+    setText('.hero-stats .stat-item:nth-child(3) .stat-label', t.statLaser);
+    setText('.scroll-indicator span', t.scroll);
+    setText('#doctor .section-label', t.doctorLabel);
+    setInner('#doctor .section-h2', t.doctorName1 + '<br><em>' + t.doctorName2 + '</em>');
+    setText('#doctor .doctor-bio', t.doctorBio);
+    setText('#doctor .doctor-tags .tag:nth-child(1)', t.doctorTag1);
+    setText('#doctor .doctor-tags .tag:nth-child(2)', t.doctorTag2);
+    setText('#doctor .doctor-tags .tag:nth-child(3)', t.doctorTag3);
+    setText('#doctor .doctor-tags .tag:nth-child(4)', t.doctorTag4);
+    setText('#doctor .doctor-tags .tag:nth-child(5)', t.doctorTag5);
+    setText('#services .section-label', t.servicesLabel);
+    setInner('#services .section-h2', t.servicesTitle1 + '<br><em>' + t.servicesTitle2 + '</em>');
+    setText('#services .section-sub', t.servicesSub);
+    setText('#services .service-card:nth-child(1) .service-title', t.service1Title);
+    setText('#services .service-card:nth-child(1) .service-desc', t.service1Text);
+    setText('#services .service-card:nth-child(2) .service-title', t.service2Title);
+    setText('#services .service-card:nth-child(2) .service-desc', t.service2Text);
+    setText('#services .service-card:nth-child(3) .service-title', t.service3Title);
+    setText('#services .service-card:nth-child(3) .service-desc', t.service3Text);
+    setText('#services .service-card:nth-child(4) .service-title', t.service4Title);
+    setText('#services .service-card:nth-child(4) .service-desc', t.service4Text);
+    setText('#testimonials .section-label', t.galleryLabel);
+    const galleryTitle = document.querySelector('#testimonials .section-h2');
+    if(galleryTitle) galleryTitle.innerHTML = t.galleryTitle1 + ' <em>' + t.galleryTitle2 + '</em>';
+    setText('.kmc-hint-desktop', t.galleryHint);
+    setText('.kmc-hint-mobile', t.galleryHintMobile);
+    setText('.kmc-center-sub', t.galleryCenter);
+    setText('#booking .section-label', t.bookingLabel);
+    setInner('#booking .section-h2', t.bookingTitle1 + '<br><em>' + t.bookingTitle2 + '</em>');
+    setText('#booking .booking-info-card > p', t.bookingSub);
+    setText('#booking .booking-detail-item:nth-child(1) .detail-label', t.branch1);
+    setInner('#booking .booking-detail-item:nth-child(1) .detail-value', 'Al-Mohawari St, Odeon Tower, Fl. 2<br><a href="tel:+963930751516" style="color:var(--text);text-decoration:none;">0930 751 516</a> · <a href="tel:+963936699112" style="color:var(--text);text-decoration:none;">0936 699 112</a>');
+    setText('#booking .booking-detail-item:nth-child(2) .detail-label', t.branch2);
+    setInner('#booking .booking-detail-item:nth-child(2) .detail-value', t.branch2Text + '<br><a href="tel:+963113301172" style="color:var(--text);text-decoration:none;">011 (3330 172)</a> · <a href="tel:+963905014050" style="color:var(--text);text-decoration:none;">0995 014 050</a>');
+    setText('#booking .booking-detail-item:nth-child(3) .detail-label', t.branch3);
+    setInner('#booking .booking-detail-item:nth-child(3) .detail-value', t.branch3Text + '<br><a href="tel:+963905014050" style="color:var(--text);text-decoration:none;">0995 014 050</a>');
+    setText('#booking .booking-detail-item:nth-child(4) .detail-label', t.branch4);
+    setText('#booking .booking-detail-item:nth-child(4) .detail-value', t.branch4Text);
+    setText('#booking .booking-detail-item:nth-child(5) .detail-label', t.bookingHours);
+    setText('#booking .booking-detail-item:nth-child(5) .detail-value', t.bookingHoursText);
+    setText('#booking .booking-detail-item:nth-child(6) .detail-label', t.bookingLine);
+    setText('#booking .booking-detail-item:nth-child(6) .detail-value', t.bookingExt);
+    setText('.form-title', t.formTitle);
+    setText('#appointmentForm .form-row .form-group:nth-child(1) label', t.fullName);
+    setText('#appointmentForm .form-row .form-group:nth-child(2) label', t.phoneNumber);
+    setText('#appointmentForm .form-group:nth-child(2) label', t.preferredBranch);
+    setText('#appointmentForm .form-group:nth-child(3) label', t.treatmentInterested);
+    setText('#appointmentForm .form-group:nth-child(4) label', t.preferredDate);
+    setText('#appointmentForm .form-group:nth-child(5) label', t.additionalMessage);
+    setAttr('#appointmentForm .form-row .form-group:nth-child(1) input', 'placeholder', t.fullName);
+    setAttr('#appointmentForm .form-row .form-group:nth-child(2) input', 'placeholder', t.phoneNumber);
+    setAttr('#appointmentForm .form-group:nth-child(5) textarea', 'placeholder', t.additionalMessage);
+    setOptionText('#appointmentForm .form-group:nth-child(2) select', 0, t.selectBranch);
+    setOptionText('#appointmentForm .form-group:nth-child(2) select', 1, t.branchOption1);
+    setOptionText('#appointmentForm .form-group:nth-child(2) select', 2, t.branchOption2);
+    setOptionText('#appointmentForm .form-group:nth-child(2) select', 3, t.branchOption3);
+    setOptionText('#appointmentForm .form-group:nth-child(2) select', 4, t.branchOption4);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 0, t.selectService);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 1, t.treatment1);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 2, t.treatment2);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 3, t.treatment3);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 4, t.treatment4);
+    setOptionText('#appointmentForm .form-group:nth-child(3) select', 5, t.treatment5);
+    setText('.submit-btn', t.submit);
+    if(successMsg) successMsg.textContent = t.success;
+    setText('#contact .section-label', t.contactLabel);
+    setInner('#contact .section-h2', t.contactTitle1 + ' <em>' + t.contactTitle2 + '</em>');
+    setText('#contact .section-sub', t.contactSub);
+    setText('#contact .contact-card:nth-child(1) h4', t.contactBranch1);
+    setInner('#contact .contact-card:nth-child(1) p', t.contactStreet1 + '<br>' + t.contactStreet2 + '<br><a href="tel:+963930751516">0930 751 516</a><br><a href="tel:+963936699112">0936 699 112</a>');
+    setText('#contact .contact-card:nth-child(2) h4', t.branch2);
+    setInner('#contact .contact-card:nth-child(2) p', t.contactBranch2Desc + '<br><a href="tel:+963113301172">011 (3330 172)</a><br><a href="tel:+963905014050">0995 014 050</a>');
+    setText('#contact .contact-card:nth-child(3) h4', t.branch3);
+    setInner('#contact .contact-card:nth-child(3) p', t.contactBranch3a + '<br>' + t.contactBranch3b + '<br><a href="tel:+963905014050">0995 014 050</a>');
+    setText('#contact .contact-card:nth-child(4) h4', t.branch4);
+    setInner('#contact .contact-card:nth-child(4) p', t.contactBranch4a + '<br>' + t.contactBranch4b);
+    setText('footer .footer-copy', t.footer);
+    setText('#lbBadge', t.lbBadge);
+
+    cardData.forEach((card, index) => {
+      const el = document.querySelector(card.selector);
+      if(!el) return;
+      el.setAttribute('data-category', t[card.category]);
+      el.setAttribute('data-title', t[card.title]);
+      el.setAttribute('data-desc', t[card.desc]);
+      const label = el.querySelector('.kmc-card-label');
+      if(label) label.textContent = t[card.label];
+      if(index === 0 && document.getElementById('lightbox')?.classList.contains('open')){
+        // updated below after loop
+      }
+    });
+
+    const lb = document.getElementById('lightbox');
+    if(lb && lb.classList.contains('open')){
+      const currentImg = document.getElementById('lbImg')?.getAttribute('src') || '';
+      const activeCard = Array.from(document.querySelectorAll('.kmc-card')).find(card => (card.getAttribute('data-src') || '') === currentImg || (card.querySelector('.kmc-card-img')?.getAttribute('src') || '') === currentImg);
+      if(activeCard){
+        const lbCat = document.getElementById('lbCategory');
+        const lbTitle = document.getElementById('lbTitle');
+        const lbText = document.getElementById('lbText');
+        if(lbCat) lbCat.textContent = activeCard.getAttribute('data-category') || '';
+        if(lbTitle) lbTitle.innerHTML = activeCard.getAttribute('data-title') || '';
+        if(lbText) lbText.textContent = activeCard.getAttribute('data-desc') || '';
+      }
+    }
+  }
+
+  // Toggle menu
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    switcher.classList.toggle('open');
+  });
+  document.addEventListener('click', e => {
+    if(!switcher.contains(e.target)) switcher.classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') switcher.classList.remove('open');
+  });
+
+  function setLang(lang){
+    applyLang(lang);
+  }
+
+  options.forEach(opt => opt.addEventListener('click', () => setLang(opt.dataset.lang)));
+
+  const saved = localStorage.getItem('kmc_lang') || 'en';
+  applyLang(saved);
+
+  if(form){
+    form.addEventListener('reset', () => {
+      const lang = localStorage.getItem('kmc_lang') || 'en';
+      requestAnimationFrame(() => applyLang(lang));
+    });
+  }
 })();
 </script>
 </body>
